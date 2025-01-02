@@ -1,5 +1,10 @@
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <p style="text-align: center;">Hello, CHENYI__2013</p>
+        {% endif %}
+    {% endif %}
     <fieldset>
         <legend><h1>{{ question.question_text }}</h1></legend>
         {% if error_message %}
@@ -11,5 +16,7 @@
             <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
         {% endfor %}
     </fieldset>
-    <input type="submit" value="Vote">
+    {% if not error_message %}
+        <input type="submit" value="Vote">
+    {% endif %}
     </form>
