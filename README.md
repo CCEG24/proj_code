@@ -1,1 +1,1 @@
-This is my first website, which will be mainly written in python with some html alongside it for user interfaces.
+This is my first website, which will be mainly written in Python with some HTML alongside it for user interfaces.
