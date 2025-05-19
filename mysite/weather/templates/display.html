@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2d662d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .weather-plot {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .weather-plot img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .weather-data {
+            margin-top: 20px;
+        }
+        .weather-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d662d;
+        }
+        .stat-label {
+            color: #666;
+        }
+        .current-weather {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .weather-box {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            width: 22%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .weather-box:hover {
+            transform: translateY(-5px);
+        }
+        .weather-box h3 {
+            color: #2d662d;
+            margin-top: 0;
+        }
+        .weather-box .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #2d662d;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .error {
+            color: #d9534f;
+            background-color: #f9f2f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2d662d;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .back-link:hover {
+            color: #1e4b1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Weather Data for {{ location }}</h1>
+        <p>Detailed weather information and statistics</p>
+    </div>
+
+    <div class="container">
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% else %}
+            <p style="text-align: center;">
+                Data shown below is the latest available data.
+            </p>
+            <div class="current-weather">
+                <div class="weather-box">
+                    <h3>Latest Max Temp</h3>
+                    <div class="value">{% if current_max_temp != 'Not Available' %}{{ current_max_temp }}°C{% else %}Not Available{% endif %}</div>
+                </div>
+                <div class="weather-box">
+                    <h3>Latest Min Temp</h3>
+                    <div class="value">{% if current_min_temp != 'Not Available' %}{{ current_min_temp }}°C{% else %}Not Available{% endif %}</div>
+                </div>
+                <div class="weather-box">
+                    <h3>Latest Max Wind</h3>
+                    <div class="value">{% if current_max_wind != 'Not Available' %}{{ current_max_wind }} m/s{% else %}Not Available{% endif %}</div>
+                </div>
+            </div>
+            <p style="text-align: center;">
+                Data shown below is for the past 30 days.
+            </p>
+            <div class="weather-stats">
+                <div class="stat-box">
+                    <div class="stat-value">{% if avg_temp != 'Not Available' %}{{ avg_temp }}°C{% else %}Not Available{% endif %}</div>
+                    <div class="stat-label">Average Temperature</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">{% if max_temp != 'Not Available' %}{{ max_temp }}°C{% else %}Not Available{% endif %}</div>
+                    <div class="stat-label">Highest Temperature</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">{% if min_temp != 'Not Available' %}{{ min_temp }}°C{% else %}Not Available{% endif %}</div>
+                    <div class="stat-label">Lowest Temperature</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">{% if max_wind != 'Not Available' %}{{ max_wind }} m/s{% else %}Not Available{% endif %}</div>
+                    <div class="stat-label">Highest Wind Speed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">{% if avg_wind != 'Not Available' %}{{ avg_wind }} m/s{% else %}Not Available{% endif %}</div>
+                    <div class="stat-label">Average Wind Speed</div>
+                </div>
+            </div>
+
+            <div class="weather-plot">
+                <img src="data:image/png;base64,{{ plot_data }}" alt="Weather Data Plot">
+            </div>
+
+            <div class="weather-data">
+                <h2>Detailed Weather Data</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Average Temperature</th>
+                            <th>Maximum Temperature</th>
+                            <th>Minimum Temperature</th>
+                            <th>Max Wind Speed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in weather_data %}
+                        <tr>
+                            <td>{{ data.datetime }}</td>
+                            <td>{% if data.temp != 'Not Available' %}{{ data.temp }}°C{% else %}Not Available{% endif %}</td>
+                            <td>{% if data.max_temp != 'Not Available' %}{{ data.max_temp }}°C{% else %}Not Available{% endif %}</td>
+                            <td>{% if data.min_temp != 'Not Available' %}{{ data.min_temp }}°C{% else %}Not Available{% endif %}</td>
+                            <td>{% if data.max_wind_spd != 'Not Available' %}{{ data.max_wind_spd }} m/s{% else %}Not Available{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+        <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>

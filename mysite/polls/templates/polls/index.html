@@ -1,10 +1,82 @@
-{% if latest_question_list %}
-    <h3 style='text-align: center;'>You can vote on the following polls:</h1>
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Polls</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2d662d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .poll-list {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .poll-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+        .poll-item:last-child {
+            border-bottom: none;
+        }
+        .poll-item:hover {
+            background-color: #f9f9f9;
+        }
+        .poll-item a {
+            color: #2d662d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .poll-item a:hover {
+            color: #1e4b1e;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2d662d;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            color: #1e4b1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Latest Polls</h1>
+        <p>Vote on the questions below</p>
+    </div>
+
+    <div class="container">
+        <div class="poll-list">
+            {% if latest_question_list %}
+                {% for question in latest_question_list %}
+                    <div class="poll-item">
+                        <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No polls are available.</p>
+            {% endif %}
+        </div>
+        <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
+    </div>
+</body>
+</html>

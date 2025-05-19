@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2d662d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h2 {
+            color: #2d662d;
+            margin-top: 0;
+        }
+        .card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .card a {
+            display: inline-block;
+            background-color: #2d662d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .card a:hover {
+            background-color: #1e4b1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        {% if is_superuser %}
+            <p style="margin-top: 10px; font-size: 1.2em;">Welcome back, {{ username }}!</p>
+        {% endif %}
+        <h1>Welcome to My Website</h1>
+        <p>Explore the different features and services available</p>
+    </div>
+
+    <div class="container">
+        <div class="card-container">
+            <div class="card">
+                <h2>Weather Data</h2>
+                <p>View detailed weather information for Kenilworth, including temperature trends and wind speed data over the past 30 days.</p>
+                <a href="{% url 'weather:display' %}">View Weather Data</a>
+            </div>
+            <div class="card">
+                <h2>Polls App</h2>
+                <p>Access a polling app to vote on your opinion.</p>
+                <a href="{% url 'polls:index' %}">View Polls</a>
+            </div>
+            <!-- Add more cards here as you create new features -->
+        </div>
+    </div>
+</body>
+</html> 

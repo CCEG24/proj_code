@@ -1,22 +1,122 @@
-<form action="{% url 'polls:vote' question.id %}" method="post">
-    {% csrf_token %}
-    {% if user.is_authenticated %}
-        {% if user.is_superuser %}
-            <p style="text-align: center;">Hello, CHENYI__2013</p>
-        {% endif %}
-    {% endif %}
-    <fieldset>
-        <legend><h1>{{ question.question_text }}</h1></legend>
-        {% if error_message %}
-            <p style="color: red;"><strong>{{ error_message }}</strong></p>
-            <p><a href="{{ redirect_url }}">Return to polls</a></p>
-        {% endif %}
-        {% for choice in question.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
-        {% endfor %}
-    </fieldset>
-    {% if not error_message %}
-        <input type="submit" value="Vote">
-    {% endif %}
-    </form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poll Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2d662d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .poll-detail {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .poll-question {
+            color: #2d662d;
+            margin-bottom: 20px;
+        }
+        .choice-list {
+            list-style: none;
+            padding: 0;
+        }
+        .choice-item {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .choice-item:hover {
+            background-color: #f9f9f9;
+        }
+        .choice-item label {
+            display: block;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .choice-item input[type="radio"] {
+            margin-right: 10px;
+        }
+        .submit-button {
+            background-color: #2d662d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .submit-button:hover {
+            background-color: #1e4b1e;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2d662d;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            color: #1e4b1e;
+        }
+        .error-message {
+            color: #d9534f;
+            background-color: #f9f2f2;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Poll Details</h1>
+        <p>Cast your vote</p>
+    </div>
+
+    <div class="container">
+        <div class="poll-detail">
+            <h2 class="poll-question">{{ question.question_text }}</h2>
+
+            {% if error_message %}
+                <div class="error-message">
+                    <p>{{ error_message }}</p>
+                </div>
+            {% endif %}
+
+            <form action="{% url 'polls:vote' question.id %}" method="post">
+                {% csrf_token %}
+                <ul class="choice-list">
+                    {% for choice in question.choice_set.all %}
+                        <li class="choice-item">
+                            <label>
+                                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                                {{ choice.choice_text }}
+                            </label>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input type="submit" value="Vote" class="submit-button">
+            </form>
+        </div>
+        <a href="{% url 'polls:index' %}" class="back-link">← Back to Polls</a>
+    </div>
+</body>
+</html>
