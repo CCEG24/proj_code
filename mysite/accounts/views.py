@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate, update_session_auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, UserUpdateForm, CustomPasswordChangeForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -10,14 +11,20 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
         
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Successfully logged in!')
-            return redirect('home:index')
-        else:
-            messages.error(request, 'Invalid username or password.')
+        # First check if user exists
+        try:
+            user = User.objects.get(username=username)
+            # If user exists, try to authenticate
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Successfully logged in!')
+                return redirect('home:index')
+            else:
+                messages.error(request, 'Incorrect password. Please try again.')
+        except User.DoesNotExist:
+            messages.error(request, f'Username "{username}" does not exist. Please check your username or register a new account.')
     
     return render(request, 'accounts/login.html')
 
