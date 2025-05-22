@@ -12,11 +12,11 @@ def login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        # First check if user exists
+        # First check if user exists (case-insensitive)
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(username__iexact=username)
             # If user exists, try to authenticate
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=user.username, password=password)
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Successfully logged in!')
