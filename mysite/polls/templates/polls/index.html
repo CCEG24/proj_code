@@ -66,15 +66,15 @@
 
     <div class="container">
         <div class="poll-list">
-            {% if latest_question_list %}
-                {% for question in latest_question_list %}
+{% if latest_question_list %}
+    {% for question in latest_question_list %}
                     <div class="poll-item">
                         <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
                     </div>
-                {% endfor %}
-            {% else %}
-                <p>No polls are available.</p>
-            {% endif %}
+    {% endfor %}
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
         </div>
         <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
     </div>

@@ -86,13 +86,13 @@
             <h2 class="poll-question">{{ question.question_text }}</h2>
 
             <ul class="choice-list">
-                {% for choice in question.choice_set.all %}
+{% for choice in question.choice_set.all %}
                     <li class="choice-item">
                         <div class="choice-text">{{ choice.choice_text }}</div>
                         <div class="choice-votes">{{ choice.votes }} vote{{ choice.votes|pluralize }}</div>
                     </li>
-                {% endfor %}
-            </ul>
+    {% endfor %}
+</ul>
 
             <a href="{% url 'polls:detail' question.id %}" class="vote-again">Vote again</a>
         </div>

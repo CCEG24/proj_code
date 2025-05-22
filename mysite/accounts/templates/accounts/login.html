@@ -1,0 +1,25 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block header %}Login{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <p style="margin-top: 20px; text-align: center;">
+        Don't have an account? <a href="{% url 'accounts:register' %}" style="color: #2d662d;">Register here</a>
+    </p>
+</div>
+{% endblock %} 

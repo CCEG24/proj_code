@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transport - Kenilworth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2d662d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card h5 {
+            color: #2d662d;
+            margin-top: 0;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .traffic-legend {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .traffic-legend strong {
+            color: #2d662d;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .traffic-item {
+            margin: 8px 0;
+            color: #666;
+        }
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2d662d;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .back-link:hover {
+            color: #1e4b1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Transport Information</h1>
+        <p>Real-time traffic updates</p>
+    </div>
+
+    <div class="container">
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <h5>Traffic Map</h5>
+                    <div id="map"></div>
+                    <div id="map-error" class="alert alert-danger" style="display: none;"></div>
+                    <div class="traffic-legend">
+                        <strong>Traffic Conditions:</strong>
+                        <div class="traffic-item">
+                            Green - No delays
+                        </div>
+                        <div class="traffic-item">
+                            Orange - Medium traffic
+                        </div>
+                        <div class="traffic-item">
+                            Red - Heavy traffic
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <h5>Current Conditions For Pinned Location</h5>
+                    <p><strong>Traffic:</strong> {{ traffic_condition }}</p>
+                    <p><strong>Temperature:</strong> {{ current_temp }}°C</p>
+                    <p><strong>Precipitation Chance:</strong> {{ current_precip }}%</p>
+                    <p><strong>Last Updated:</strong> {{ current_time }}</p>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Google Maps JavaScript API -->
+    <script>
+        function handleMapError(error) {
+            console.error('Google Maps Error:', error);
+            const errorDiv = document.getElementById('map-error');
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Error loading map: ' + error.message;
+        }
+
+        function initMap() {
+            try {
+                // Kenilworth coordinates
+                const kenilworth = { lat: {{ latitude }}, lng: {{ longitude }} };
+                
+                // Create the map with adjusted settings
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 12,
+                    center: kenilworth,
+                    mapTypeId: "roadmap",
+                    mapTypeControl: true,
+                    streetViewControl: false,
+                    fullscreenControl: true,
+                    zoomControl: true,
+                    scaleControl: true
+                });
+
+                // Add traffic layer
+                const trafficLayer = new google.maps.TrafficLayer();
+                trafficLayer.setMap(map);
+
+                // Add marker for Kenilworth
+                const marker = new google.maps.Marker({
+                    position: kenilworth,
+                    map: map,
+                    title: "Kenilworth"
+                });
+
+                // Set bounds to show surrounding area
+                const bounds = new google.maps.LatLngBounds();
+                bounds.extend(kenilworth);
+                
+                // Add padding to bounds
+                const padding = 0.1;
+                bounds.extend({ lat: kenilworth.lat + padding, lng: kenilworth.lng + padding });
+                bounds.extend({ lat: kenilworth.lat - padding, lng: kenilworth.lng - padding });
+                
+                // Fit map to bounds
+                map.fitBounds(bounds);
+            } catch (error) {
+                handleMapError(error);
+            }
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"
+        onerror="handleMapError(new Error('Failed to load Google Maps API'))">
+    </script>
+</body>
+</html> 

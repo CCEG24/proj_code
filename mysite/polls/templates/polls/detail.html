@@ -101,20 +101,20 @@
                 </div>
             {% endif %}
 
-            <form action="{% url 'polls:vote' question.id %}" method="post">
-                {% csrf_token %}
+<form action="{% url 'polls:vote' question.id %}" method="post">
+    {% csrf_token %}
                 <ul class="choice-list">
-                    {% for choice in question.choice_set.all %}
+        {% for choice in question.choice_set.all %}
                         <li class="choice-item">
                             <label>
-                                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
                                 {{ choice.choice_text }}
                             </label>
                         </li>
-                    {% endfor %}
+        {% endfor %}
                 </ul>
                 <input type="submit" value="Vote" class="submit-button">
-            </form>
+    </form>
         </div>
         <a href="{% url 'polls:index' %}" class="back-link">← Back to Polls</a>
     </div>

@@ -21,5 +21,8 @@ urlpatterns = [
     path("polls/", include("polls.urls")),
     path("admin/", admin.site.urls),
     path("weather/", include("weather.urls")),
+    path("transport/", include("transport.urls")),
     path("", include("home.urls")),  # Add home app at root URL
+    path("comments/", include("comments.urls")), # Include the comments app URLs
+    path('accounts/', include('accounts.urls')),
 ]

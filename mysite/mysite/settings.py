@@ -25,9 +25,8 @@ SECRET_KEY = 'django-insecure-hh^lq=qkabcxazhkn#h=z0nu(oyyk=v$ph2slh@-n#&6fq2osh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-#My edits
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'f8d2-82-13-8-54.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://localhost:8000', 'https://127.0.0.1:8000', 'https://f8d2-82-13-8-54.ngrok-free.app']
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # Session timeout settings (in seconds)
@@ -38,15 +37,18 @@ SESSION_SAVE_EVERY_REQUEST = True  # Update session on every request
 # Application definition
 
 INSTALLED_APPS = [
-    'weather.apps.WeatherConfig',
-    'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
+    'polls.apps.PollsConfig',
+    'weather.apps.WeatherConfig',
+    'home.apps.HomeConfig',
+    'transport.apps.TransportConfig',
+    'comments.apps.CommentsConfig',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -111,11 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/London'
 
 USE_I18N = True
 
@@ -131,3 +133,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Google Maps API Key
+GOOGLE_MAPS_API_KEY = 'AIzaSyBkRlMPIUHHmOp096UZGVSAiN84EPnKJjE'  # Replace with your actual API key

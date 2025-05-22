@@ -134,21 +134,23 @@
                 {{ error }}
             </div>
         {% else %}
-            <p style="text-align: center;">
-                Data shown below is the latest available data.
             </p>
             <div class="current-weather">
                 <div class="weather-box">
-                    <h3>Latest Max Temp</h3>
-                    <div class="value">{% if current_max_temp != 'Not Available' %}{{ current_max_temp }}°C{% else %}Not Available{% endif %}</div>
+                    <h3>Forecast For</h3>
+                    <div class="value">{{ current_date }}</div>
                 </div>
                 <div class="weather-box">
-                    <h3>Latest Min Temp</h3>
-                    <div class="value">{% if current_min_temp != 'Not Available' %}{{ current_min_temp }}°C{% else %}Not Available{% endif %}</div>
+                    <h3>Max Temperature</h3>
+                    <div class="value">{{ current_max_temp }}°C</div>
                 </div>
                 <div class="weather-box">
-                    <h3>Latest Max Wind</h3>
-                    <div class="value">{% if current_max_wind != 'Not Available' %}{{ current_max_wind }} m/s{% else %}Not Available{% endif %}</div>
+                    <h3>Min Temperature</h3>
+                    <div class="value">{{ current_min_temp }}°C</div>
+                </div>
+                <div class="weather-box">
+                    <h3>Max Wind Speed</h3>
+                    <div class="value">{{ current_max_wind }} m/s</div>
                 </div>
             </div>
             <p style="text-align: center;">
@@ -208,6 +210,7 @@
             </div>
         {% endif %}
         <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
+        <p>Disclaimer: Data may not be accurate.</p>
     </div>
 </body>
 </html>

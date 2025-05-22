@@ -22,6 +22,24 @@
             text-align: center;
             margin-bottom: 30px;
         }
+        .nav-links {
+            margin-top: 10px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-links a:hover {
+            background-color: #1e4b1e;
+        }
+        .welcome-text {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -62,11 +80,20 @@
 </head>
 <body>
     <div class="header">
-        {% if is_superuser %}
-            <p style="margin-top: 10px; font-size: 1.2em;">Welcome back, {{ username }}!</p>
+        {% if user.is_authenticated %}
+            <p class="welcome-text">Welcome back, {{ user.username }}!</p>
         {% endif %}
         <h1>Welcome to My Website</h1>
         <p>Explore the different features and services available</p>
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:logout' %}">Logout</a>
+                <a href="{% url 'accounts:profile' %}">View Account Details</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}">Login</a>
+                <a href="{% url 'accounts:register' %}">Register</a>
+            {% endif %}
+        </div>
     </div>
 
     <div class="container">
@@ -80,6 +107,16 @@
                 <h2>Polls App</h2>
                 <p>Access a polling app to vote on your opinion.</p>
                 <a href="{% url 'polls:index' %}">View Polls</a>
+            </div>
+            <div class="card">
+                <h2>Traffic Data</h2>
+                <p>View traffic data for specific areas using an embedded google maps page.</p>
+                <a href="{% url 'transport:transport' %}">View Traffic Data</a>
+            </div>
+            <div class="card">
+                <h2>Comment Wall</h2>
+                <p>Give feedback for this site.</p>
+                <a href="{% url 'comments:comment_wall' %}">View And Add Comments</a>
             </div>
             <!-- Add more cards here as you create new features -->
         </div>

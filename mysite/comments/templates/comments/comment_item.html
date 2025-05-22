@@ -1,0 +1,38 @@
+<div class="comment-item">
+    <p class="comment-meta">
+        <span class="comment-author">
+            {% if comment.user %}
+                {{ comment.user.username }}
+                {% if comment.user.is_superuser %}
+                    <span class="superuser-tag">Admin</span>
+                {% endif %}
+            {% else %}
+                Anonymous
+            {% endif %}
+        </span>
+        - {{ comment.created_at|date:"F j, Y, P" }}
+        {% if not comment.parent %}{# Only show reply link for top-level comments for now #}
+             <a href="#" class="reply-link">Reply</a>
+        {% endif %}
+    </p>
+    <p class="comment-text">{{ comment.content }}</p>
+
+    {# Reply Form (initially hidden) #}
+    <div class="reply-form">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <button type="submit">Submit Reply</button>
+        </form>
+    </div>
+
+    {# Recursively display replies #}
+    {% if comment.replies.exists %}
+        <div class="replies">
+            {% for reply in comment.replies.all %}
+                {% include 'comments/comment_item.html' with comment=reply %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div> 
