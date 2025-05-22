@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hh^lq=qkabcxazhkn#h=z0nu(oyyk=v$ph2slh@-n#&6fq2osh'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'f8d2-82-13-8-54.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS = ['https://localhost:8000', 'https://127.0.0.1:8000', 'https://f8d2-82-13-8-54.ngrok-free.app']
+# Get allowed hosts from environment variable
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # Session timeout settings (in seconds)
@@ -134,5 +140,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Google Maps API Key
-GOOGLE_MAPS_API_KEY = 'AIzaSyBkRlMPIUHHmOp096UZGVSAiN84EPnKJjE'  # Replace with your actual API key
+# Weather API settings
+WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')
+
+# Google Maps API settings
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
