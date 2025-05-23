@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, UserUpdateForm, CustomPasswordChangeForm
+from .forms import CustomUserCreationForm, UserUpdateForm, CustomPasswordChangeForm, UsernameUpdateForm, EmailUpdateForm
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -61,8 +61,16 @@ def profile_view(request):
     user = request.user
     
     if request.method == 'POST':
-        if 'update_email' in request.POST:
-            email_form = UserUpdateForm(request.POST, instance=user)
+        if 'update_username' in request.POST:
+            username_form = UsernameUpdateForm(request.POST, instance=user)
+            if username_form.is_valid():
+                username_form.save()
+                messages.success(request, 'Your username has been updated!')
+                return redirect('accounts:profile')
+            else:
+                messages.error(request, 'Please correct the error below.')
+        elif 'update_email' in request.POST:
+            email_form = EmailUpdateForm(request.POST, instance=user)
             if email_form.is_valid():
                 email_form.save()
                 messages.success(request, 'Your email has been updated!')
@@ -79,7 +87,8 @@ def profile_view(request):
             else:
                 messages.error(request, 'Please correct the error below.')
     else:
-        email_form = UserUpdateForm(instance=user)
+        username_form = UsernameUpdateForm(instance=user)
+        email_form = EmailUpdateForm(instance=user)
         password_form = CustomPasswordChangeForm(user)
     
     context = {
@@ -88,6 +97,7 @@ def profile_view(request):
         'date_joined': user.date_joined.strftime('%B %d, %Y'),
         'last_login': user.last_login.strftime('%B %d, %Y %H:%M') if user.last_login else 'Never',
         'is_superuser': user.is_superuser,
+        'username_form': username_form,
         'email_form': email_form,
         'password_form': password_form,
     }

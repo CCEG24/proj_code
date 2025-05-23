@@ -2,70 +2,48 @@
 
 {% block title %}Profile{% endblock %}
 
-{% block header %}Your Profile{% endblock %}
+{% block header %}Profile{% endblock %}
 
 {% block content %}
-<div class="form-container">
+<div class="profile-container">
     <div class="profile-info">
-        <div class="info-group">
-            <label>Username:</label>
-            <p>{{ username }}</p>
-        </div>
-        <div class="info-group">
-            <label>Email:</label>
-            <p>{{ email }}</p>
-        </div>
-        <div class="info-group">
-            <label>Date Joined:</label>
-            <p>{{ date_joined }}</p>
-        </div>
-        <div class="info-group">
-            <label>Last Login:</label>
-            <p>{{ last_login }}</p>
-        </div>
+        <h2>Account Information</h2>
+        <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Date Joined:</strong> {{ date_joined }}</p>
+        <p><strong>Last Login:</strong> {{ last_login }}</p>
         {% if is_superuser %}
-        <div class="info-group">
-            <label>Account Type:</label>
-            <p>Superuser</p>
-        </div>
+        <p><strong>Role:</strong> Administrator</p>
         {% endif %}
     </div>
 
-    <div class="update-section">
-        <h2>Update Account Details</h2>
-        <form method="post" class="update-form">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_username">Username:</label>
-                {{ email_form.username }}
-                {% if email_form.username.errors %}
-                <div class="errorlist">
-                    {% for error in email_form.username.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            <div class="form-group">
-                <label for="id_email">Email:</label>
-                {{ email_form.email }}
-                {% if email_form.email.errors %}
-                <div class="errorlist">
-                    {% for error in email_form.email.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            <button type="submit" name="update_email" class="btn">Update Details</button>
-        </form>
+    <div class="profile-forms">
+        <div class="form-section">
+            <h3>Update Username</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ username_form.as_p }}
+                <button type="submit" name="update_username" class="btn">Update Username</button>
+            </form>
+        </div>
 
-        <h2>Change Password</h2>
-        <form method="post" class="update-form">
-            {% csrf_token %}
-            {{ password_form.as_p }}
-            <button type="submit" name="change_password" class="btn">Change Password</button>
-        </form>
+        <div class="form-section">
+            <h3>Update Email</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ email_form.as_p }}
+                <button type="submit" name="update_email" class="btn">Update Email</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h3>Change Password</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ password_form.as_p }}
+                <button type="submit" name="change_password" class="btn">Change Password</button>
+            </form>
+        </div>
     </div>
 </div>
 

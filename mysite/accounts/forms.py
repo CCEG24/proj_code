@@ -17,19 +17,25 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField(required=True)
+class UsernameUpdateForm(forms.ModelForm):
     username = forms.CharField(required=True)
     
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username']
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
             raise ValidationError('This username is already taken.')
         return username
+
+class EmailUpdateForm(forms.ModelForm):
+    email = forms.EmailField(required=True)
+    
+    class Meta:
+        model = User
+        fields = ['email']
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     class Meta:
