@@ -28,15 +28,6 @@
         </div>
 
         <div class="form-section">
-            <h3>Update Email</h3>
-            <form method="post">
-                {% csrf_token %}
-                {{ email_form.as_p }}
-                <button type="submit" name="update_email" class="btn">Update Email</button>
-            </form>
-        </div>
-
-        <div class="form-section">
             <h3>Change Password</h3>
             <form method="post">
                 {% csrf_token %}

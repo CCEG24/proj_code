@@ -30,13 +30,6 @@ class UsernameUpdateForm(forms.ModelForm):
             raise ValidationError('This username is already taken.')
         return username
 
-class EmailUpdateForm(forms.ModelForm):
-    email = forms.EmailField(required=True)
-    
-    class Meta:
-        model = User
-        fields = ['email']
-
 class CustomPasswordChangeForm(PasswordChangeForm):
     class Meta:
         model = User
