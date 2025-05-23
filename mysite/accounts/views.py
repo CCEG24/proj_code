@@ -66,7 +66,7 @@ def profile_view(request):
             if email_form.is_valid():
                 email_form.save()
                 messages.success(request, 'Your email has been updated!')
-                return redirect('profile')
+                return redirect('accounts:profile')
             else:
                 messages.error(request, 'Please correct the error below.')
         elif 'change_password' in request.POST:
@@ -75,7 +75,7 @@ def profile_view(request):
                 user = password_form.save()
                 update_session_auth_hash(request, user)  # Keep user logged in
                 messages.success(request, 'Your password has been changed!')
-                return redirect('profile')
+                return redirect('accounts:profile')
             else:
                 messages.error(request, 'Please correct the error below.')
     else:
