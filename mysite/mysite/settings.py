@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Get allowed hosts from environment variable
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'f8d2-82-13-8-54.ngrok-free.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'df1c-82-13-8-54.ngrok-free.app']
 CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'transport.apps.TransportConfig',
     'comments.apps.CommentsConfig',
     'accounts',
+    'forums',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

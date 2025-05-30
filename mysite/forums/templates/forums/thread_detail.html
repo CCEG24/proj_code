@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ thread.title }}{% endblock %}
+
+{% block header %}{{ thread.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+<h1>{{ thread.title }}</h1>
+<p>Started by {{ thread.user.username }} on {{ thread.created_at|date:"F j, Y, P" }}</p>
+
+<div class="posts">
+    {% for post in posts %}
+        {% include 'forums/includes/post.html' with post=post form=form %}
+    {% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+
+<div class="card">
+<h2>Add a Post</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Post</button>
+    </form>
+</div>
+{% else %}
+    <p>Please log in to add a post.</p>
+{% endif %}
+
+</div>
+{% endblock %} 

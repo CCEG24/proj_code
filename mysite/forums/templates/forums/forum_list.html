@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Forums{% endblock %}
+
+{% block header %}Forums{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<div class="poll-list">
+{% if threads %}
+    {% for thread in threads %}
+        <div class="poll-item">
+            <a href="{% url 'forums:thread_detail' pk=thread.pk %}">{{ thread.title }}</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No threads yet.</p>
+{% endif %}
+</div>
+
+<p><a href="{% url 'forums:create_thread' %}">Create New Thread</a></p>
+
+</div>
+{% endblock %} 

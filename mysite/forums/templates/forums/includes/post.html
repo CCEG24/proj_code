@@ -1,0 +1,40 @@
+<div class="comment-item">
+    <p class="comment-meta">
+        <span class="comment-author">
+            {% if post.user %}
+                {{ post.user.username }}
+                {% if post.user.is_superuser %}
+                    <span class="superuser-tag">Admin</span>
+                {% endif %}
+            {% else %}
+                Anonymous
+            {% endif %}
+        </span>
+        - {{ post.created_at|date:"F j, Y, P" }}
+        {% if user.is_authenticated %}
+             <a href="#" class="reply-link">Reply</a>
+        {% endif %}
+    </p>
+    <p class="comment-text">{{ post.content }}</p>
+
+    {# Reply Form #}
+    {% if user.is_authenticated %}
+        <div class="reply-form">
+            <form method="post" action="{% url 'forums:thread_detail' pk=post.thread.pk %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="hidden" name="parent_id" value="{{ post.pk }}">
+                <button type="submit">Reply</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {# Recursively display replies #}
+    {% if post.replies.exists %}
+        <div class="replies">
+            {% for reply in post.replies.all %}
+                {% include 'forums/includes/post.html' with post=reply form=form %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div> 
