@@ -149,6 +149,8 @@ def display(request):
         if isinstance(tomorrow_precip_chance, (int, float)): tomorrow_precip_chance = round(tomorrow_precip_chance, 1)
 
         # Create two subplots
+        # The following block is commented out to save CPU on Render free tier.
+        """
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12))
         
         # Format dates for plotting
@@ -182,6 +184,8 @@ def display(request):
             plt.close()
             buffer.seek(0)
             plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        """
+        plot_data = None # Explicitly set plot_data to None here as graph generation is commented out
 
         # Pass the data to the template
         context = {
