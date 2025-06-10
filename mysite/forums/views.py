@@ -36,7 +36,7 @@ def thread_detail(request, pk):
                         pass # Or handle invalid parent_id
 
             new_post.save()
-            return redirect('thread_detail', pk=thread.pk)
+            return redirect('forums:thread_detail', pk=thread.pk)
     else:
         form = PostForm()
 

@@ -3,9 +3,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-from .models import Choice, Question
+from .models import Choice, Question, Vote
 from django.views.decorators.cache import cache_page
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 def logout(request):
     # Clear any session-related data before logging out
@@ -15,6 +17,8 @@ def logout(request):
     auth_logout(request)  # Log the user out
     return HttpResponseRedirect(reverse('polls:index'))
 
+# Apply login_required to the DetailView and ResultsView class-based views
+@method_decorator(login_required, name='dispatch')
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
@@ -24,25 +28,27 @@ class IndexView(generic.ListView):
         return Question.objects.order_by("-pub_date")[:5]
 
 
+@method_decorator(login_required, name='dispatch')
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
 
+@method_decorator(login_required, name='dispatch')
 class ResultsView(generic.DetailView):
     model = Question
     template_name = "polls/results.html"
 
+@login_required
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    if not request.user.is_superuser:
-        
-        if f'voted_{question_id}' in request.session:
-            return render(request, 'polls/detail.html', {
-                'question': question,
-                'error_message': "You've already voted on this poll.",
-                'redirect_url': '/polls/'
-            })
-    
+
+    # Check if the user has already voted on this question
+    if Vote.objects.filter(user=request.user, question=question).exists():
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You have already voted on this poll.",
+        })
+
     try:
         selected_choice = question.choice_set.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
@@ -56,10 +62,10 @@ def vote(request, question_id):
             },
         )
     else:
-        selected_choice.votes += 1
+        selected_choice.votes = F('votes') + 1
         selected_choice.save()
-        # Mark this poll as voted in the session
-        if not request.user.is_superuser:
-            request.session[f'voted_{question_id}'] = True
-            print(f"Session Data: {request.session.items()}")
+
+        # Create a Vote object to record the user's vote
+        Vote.objects.create(user=request.user, question=question)
+
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))

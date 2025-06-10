@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Get allowed hosts from environment variable
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'df1c-82-13-8-54.ngrok-free.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'c071-82-13-8-54.ngrok-free.app']
 CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
