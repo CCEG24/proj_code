@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Get allowed hosts from environment variable
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'y7web.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'schoolwesbite-nx3v.onrender.com']
 CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
