@@ -10,7 +10,7 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.title.label_tag }} {{ form.title }}
     <div class="form-group">
         <label>Visibility:</label>
         <div class="radio-options">
@@ -20,6 +20,7 @@
             Private threads will only be visible to you and won't appear in the forum list.
             They can still be accessed via direct URL by anyone who knows it.
         </small>
+    </div>
     </div>
     <button type="submit">Create Thread</button>
 </form>
