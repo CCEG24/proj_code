@@ -12,4 +12,7 @@ class PostForm(forms.ModelForm):
 class ThreadForm(forms.ModelForm):
     class Meta:
         model = Thread
-        fields = ['title'] 
+        fields = ['title', 'visibility']
+        widgets = {
+            'visibility': forms.RadioSelect
+        } 

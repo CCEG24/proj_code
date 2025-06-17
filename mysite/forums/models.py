@@ -4,9 +4,15 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Thread(models.Model):
+    VISIBILITY_CHOICES = [
+        ('public', 'Public'),
+        ('private', 'Private'),
+    ]
+    
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    visibility = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default='public')
 
     def __str__(self):
         return self.title

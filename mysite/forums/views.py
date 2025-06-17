@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from .models import Thread, Post
 from .forms import PostForm, ThreadForm
 
@@ -7,12 +8,18 @@ from .forms import PostForm, ThreadForm
 
 @login_required
 def forum_list(request):
-    threads = Thread.objects.all().order_by('-created_at')
+    # Only show public threads in the list
+    threads = Thread.objects.filter(visibility='public').order_by('-created_at')
     return render(request, 'forums/forum_list.html', {'threads': threads})
 
 @login_required
 def thread_detail(request, pk):
     thread = get_object_or_404(Thread, pk=pk)
+    
+    # Check if thread is private and user is not the creator
+    if thread.visibility == 'private' and thread.user != request.user:
+        raise Http404("Thread not found")
+    
     posts = thread.posts.filter(parent__isnull=True).order_by('created_at') # Get top-level posts
 
     if request.user.is_authenticated:
