@@ -3,13 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from .models import Thread, Post
 from .forms import PostForm, ThreadForm
+from django.db import models
 
 # Create your views here.
 
 @login_required
 def forum_list(request):
     # Only show public threads in the list
-    threads = Thread.objects.filter(visibility='public').order_by('-created_at')
+    threads = Thread.objects.filter(
+    models.Q(visibility='public') | models.Q(user=request.user)
+    ).order_by('-created_at').distinct()
     return render(request, 'forums/forum_list.html', {'threads': threads})
 
 @login_required
