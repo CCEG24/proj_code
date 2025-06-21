@@ -9,10 +9,12 @@ from django.db import models
 
 @login_required
 def forum_list(request):
-    # Only show public threads in the list
-    threads = Thread.objects.filter(
-    models.Q(visibility='public') | models.Q(user=request.user)
-    ).order_by('-created_at').distinct()
+    if request.user.is_superuser:
+        threads = Thread.objects.all().order_by('-created_at')
+    else:
+        threads = Thread.objects.filter(
+            models.Q(visibility='public') | models.Q(user=request.user)
+        ).order_by('-created_at').distinct()
     return render(request, 'forums/forum_list.html', {'threads': threads})
 
 @login_required
