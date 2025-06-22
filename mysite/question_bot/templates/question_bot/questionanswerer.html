@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Question Answerer 5000{% endblock %}
+
+{% block header %}Question Answerer 5000{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="question">Ask your question:</label>
+                <input type="text" id="question" name="question" placeholder="Ask your question here..." required>
+            </div>
+            <button type="submit" class="btn">Ask</button>
+        </form>
+        {% if answer %}
+            <div class="form-group" style="margin-top:20px;">
+                <label>Answer:</label>
+                <p>{{ answer }}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

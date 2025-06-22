@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'comments.apps.CommentsConfig',
     'accounts',
     'forums',
+    'question_bot'
 ]
 
 MIDDLEWARE = [
