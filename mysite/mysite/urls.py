@@ -26,4 +26,5 @@ urlpatterns = [
     path("comments/", include("comments.urls")), # Include the comments app URLs
     path('accounts/', include('accounts.urls')),
     path('forums/', include(('forums.urls', 'forums'), namespace='forums')),
+    path('question_bot/', include('question_bot.urls')),
 ]
