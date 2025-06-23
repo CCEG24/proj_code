@@ -1,6 +1,7 @@
 import random
 import time
 from .models import Answer, Question
+import sympy
 
 testForAprilFools = False
 
@@ -26,6 +27,14 @@ possibleAnswers = [
 ]
 
 def handle_question():
+    q = Question.objects.filter(text__icontains='calculate').first()
+    if q:
+        a, b, expr = q.text.partition('calculate')
+        expr = expr.strip()
+        try:
+            return str(sympy.sympify(expr).evalf())
+        except Exception:
+             return "That isn't a maths question >:("
     answer = random.choice(possibleAnswers)
     if april_fools:
           answer = answer[::-1]
