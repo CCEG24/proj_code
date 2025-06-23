@@ -34,9 +34,11 @@ def handle_question(question_text):
             result = sympy.sympify(expr).evalf()
             result_float = float(result)
             if result_float.is_integer():
+                print("RAW expr:", repr(expr))
                 return str(int(result_float))
             else:
                 rounded = round(result_float, 5)
+                print("RAW expr:", repr(expr))
                 return str(rounded).rstrip('0').rstrip('.')
         except Exception:
             return "That isn't a maths question >:("
