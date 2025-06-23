@@ -7,5 +7,5 @@ def index(request):
     if request.method == 'POST':
         question = request.POST.get('question')
         if question:
-            answer = handle_question()
+            answer = handle_question(question)
     return render(request, 'question_bot/questionanswerer.html', {'answer': answer})

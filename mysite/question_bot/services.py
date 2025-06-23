@@ -26,16 +26,15 @@ possibleAnswers = [
       "I don't know, ask AltaVista",
 ]
 
-def handle_question():
-    q = Question.objects.filter(text__icontains='calculate').first()
-    if q:
-        a, b, expr = q.text.partition('calculate')
+def handle_question(question_text):
+    if 'calculate' in question_text.lower():
+        _, _, expr = question_text.partition('calculate')
         expr = expr.strip()
         try:
             return str(sympy.sympify(expr).evalf())
         except Exception:
-             return "That isn't a maths question >:("
+            return "That isn't a maths question >:("
     answer = random.choice(possibleAnswers)
     if april_fools:
-          answer = answer[::-1]
+        answer = answer[::-1]
     return answer
