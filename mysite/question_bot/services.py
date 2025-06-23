@@ -28,10 +28,16 @@ possibleAnswers = [
 
 def handle_question(question_text):
     if 'calculate' in question_text.lower():
-        _, _, expr = question_text.partition('calculate')
+        a, b, expr = question_text.partition('calculate')
         expr = expr.strip()
         try:
-            return str(sympy.sympify(expr).evalf())
+            result = sympy.sympify(expr).evalf()
+            result_float = float(result)
+            if result_float.is_integer():
+                return str(int(result_float))
+            else:
+                rounded = round(result_float, 5)
+                return str(rounded).rstrip('0').rstrip('.')
         except Exception:
             return "That isn't a maths question >:("
     answer = random.choice(possibleAnswers)
