@@ -2,6 +2,8 @@ import random
 import time
 from .models import Answer, Question
 import sympy
+import logging
+logger = logging.getLogger(__name__)
 
 testForAprilFools = False
 
@@ -34,11 +36,11 @@ def handle_question(question_text):
             result = sympy.sympify(expr).evalf()
             result_float = float(result)
             if result_float.is_integer():
-                print("RAW expr:", repr(expr))
+                logger.info(f"expr: {expr}, result: {result}")
                 return str(int(result_float))
             else:
                 rounded = round(result_float, 5)
-                print("RAW expr:", repr(expr))
+                logger.info(f"expr: {expr}, result: {result}")
                 return str(rounded).rstrip('0').rstrip('.')
         except Exception:
             return "That isn't a maths question >:("
