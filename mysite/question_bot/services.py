@@ -30,19 +30,26 @@ possibleAnswers = [
 
 def handle_question(question_text):
     if 'calculate' in question_text.lower():
-        a, b, expr = question_text.partition('calculate')
+        _, _, expr = question_text.partition('calculate')
         expr = expr.strip()
+        expr = expr.replace('x', '*').replace('X', '*').replace('÷', '/')
         try:
             result = sympy.sympify(expr).evalf()
-            result_float = float(result)
-            if result_float.is_integer():
-                logger.info(f"expr: {expr}, result: {result}")
-                return str(int(result_float))
-            else:
-                rounded = round(result_float, 5)
-                logger.info(f"expr: {expr}, result: {result}")
-                return str(rounded).rstrip('0').rstrip('.')
-        except Exception:
+            logger.info(f"expr: {expr}, result: {result}, type: {type(result)}")
+            try:
+                result_float = float(result)
+                if result_float.is_integer():
+                    logger.info(f"Returning integer: {result_float}")
+                    return str(int(result_float))
+                else:
+                    rounded = round(result_float, 5)
+                    logger.info(f"Returning rounded: {rounded}")
+                    return str(rounded).rstrip('0').rstrip('.')
+            except Exception as e:
+                logger.error(f"Float conversion failed: {e}, result: {result}")
+                return str(result)
+        except Exception as e:
+            logger.error(f"Sympy evaluation failed: {e}, expr: {expr}")
             return "That isn't a maths question >:("
     answer = random.choice(possibleAnswers)
     if april_fools:
