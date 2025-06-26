@@ -35,15 +35,12 @@ def handle_question(question_text):
         expr = expr.replace('x', '*').replace('X', '*').replace('÷', '/')
         try:
             result = sympy.sympify(expr).evalf()
-            logger.info(f"expr: {expr}, result: {result}, type: {type(result)}")
             try:
                 result_float = float(result)
                 if result_float.is_integer():
-                    logger.info(f"Returning integer: {result_float}")
                     return str(int(result_float))
                 else:
                     rounded = round(result_float, 5)
-                    logger.info(f"Returning rounded: {rounded}")
                     return str(rounded).rstrip('0').rstrip('.')
             except Exception as e:
                 logger.error(f"Float conversion failed: {e}, result: {result}")
