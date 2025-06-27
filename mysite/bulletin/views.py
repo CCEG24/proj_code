@@ -98,16 +98,20 @@ def save_calendar(calendar, filename="school_bulletin.ics"):
         f.write(str(calendar))
 
 def bulletin_upload(request):
+    error_message = None
     if request.method == "POST":
         form = BulletinUploadForm(request.POST, request.FILES)
         if form.is_valid():
             pdf_file = form.cleaned_data['pdf']
-            pdf_text = extract_pdf_text_from_file(pdf_file)
-            week_start_date = extract_week_start_date(pdf_text)
-            calendar = extract_events(pdf_text, week_start_date)
-            response = HttpResponse(str(calendar), content_type='text/calendar')
-            response['Content-Disposition'] = 'attachment; filename=school_bulletin.ics'
-            return response
+            try:
+                pdf_text = extract_pdf_text_from_file(pdf_file)
+                week_start_date = extract_week_start_date(pdf_text)
+                calendar = extract_events(pdf_text, week_start_date)
+                response = HttpResponse(str(calendar), content_type='text/calendar')
+                response['Content-Disposition'] = 'attachment; filename=school_bulletin.ics'
+                return response
+            except Exception:
+                error_message = "Sorry, but there was an error processing the bulletin. Please ensure that the bulletin is a KES bulletin."
     else:
         form = BulletinUploadForm()
-    return render(request, "bulletin/upload.html", {"form": form})
+    return render(request, "bulletin/upload.html", {"form": form, "error_message": error_message})
