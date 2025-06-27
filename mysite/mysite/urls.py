@@ -27,5 +27,5 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('forums/', include(('forums.urls', 'forums'), namespace='forums')),
     path('question_bot/', include('question_bot.urls')),
-    path('bulletin/', include('bulletin.urls')),
+    path('bulletin/', include(('bulletin.urls', 'bulletin'), namespace='bulletin')),
 ]
