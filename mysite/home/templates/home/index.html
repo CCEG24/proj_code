@@ -126,14 +126,19 @@
                 <a href="{% url 'forums:forum_list' %}">View Forums</a>
             </div>
             <div class="card">
-                <h2>GitHub</h2>
-                <p>View the GitHub for this website.</p>
-                <a href="https://github.com/CCEG24/proj_code">View the GitHub</a>
-            </div>
-            <div class="card">
                 <h2>Question Answerer 5000</h2>
                 <p>Ask a question and get an answer.</p>
                 <a href="{% url 'question_bot:index' %}">View Question Answerer 5000</a>
+            </div>
+            <div class="card">
+                <h2>KES Weekly Bulletin Parser</h2>
+                <p>Upload the weekly bulletin here and it will be parsed and translated into an ICS file which will be downloaded for you to upload directly into your calendar (will only work for KES bulletin).</p>
+                <a href="{% url 'bulletin:upload' %}">View Question Answerer 5000</a>
+            </div>
+            <div class="card">
+                <h2>GitHub</h2>
+                <p>View the GitHub for this website.</p>
+                <a href="https://github.com/CCEG24/proj_code">View the GitHub</a>
             </div>
             <!-- Add more cards here as you create new features -->
         </div>
