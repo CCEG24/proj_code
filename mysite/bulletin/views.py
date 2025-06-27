@@ -114,4 +114,5 @@ def bulletin_upload(request):
                 error_message = "Sorry, but there was an error processing the bulletin. Please ensure that the bulletin is a KES bulletin."
     else:
         form = BulletinUploadForm()
+        error_message = None  # Explicitly clear error on GET
     return render(request, "bulletin/upload.html", {"form": form, "error_message": error_message})
