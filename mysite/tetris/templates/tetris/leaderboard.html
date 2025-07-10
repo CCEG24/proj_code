@@ -4,7 +4,14 @@
     <h2>Tetris Leaderboard</h2>
     <ol>
       {% for score in scores %}
-        <li>{{ score.user.username if score.user else "Anonymous" }}: {{ score.score }}</li>
+        <li>
+          {% if score.user %}
+            {{ score.user.username }}
+          {% else %}
+            Anonymous
+          {% endif %}
+          : {{ score.score }}
+        </li>
       {% endfor %}
     </ol>
   </div>
