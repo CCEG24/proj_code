@@ -28,4 +28,5 @@ urlpatterns = [
     path('forums/', include(('forums.urls', 'forums'), namespace='forums')),
     path('question_bot/', include('question_bot.urls')),
     path('bulletin/', include(('bulletin.urls', 'bulletin'), namespace='bulletin')),
+    path('tetris/', include(('tetris.urls', 'tetris'), namespace='tetris')),
 ]
