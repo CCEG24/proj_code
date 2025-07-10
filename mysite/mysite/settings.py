@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'accounts',
     'forums',
     'question_bot',
-    'bulletin'
+    'bulletin',
+    'tetris.apps.TetrisConfig',
 ]
 
 MIDDLEWARE = [
