@@ -23,9 +23,7 @@
     <p>Use the arrow keys to move the tetris piece.</p>
     <p>Use the q and w keys to rotate the tetris piece.</p>
     <p>Use the p key to pause the game.</p>
-    <p>Use the space key to drop the tetris piece.</p>
-    <p>Use the enter key to restart the game.</p>
-    <p>Use the escape key to exit the game.</p>
+    <p>Use the down arrow key to drop the tetris piece.</p>
   </div>
 </div>
 <script>
@@ -162,6 +160,15 @@
     if (collide(arena, player)) {
       arena.forEach(row => row.fill(0));
       saveHighScore();
+      // --- POST score to Django ---
+      fetch('/tetris/submit_score/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: 'score=' + encodeURIComponent(score)
+      });
       score = 0;
       updateScore();
       alert("Game Over!");
@@ -242,5 +249,20 @@
   playerReset();
   update();
   updateScore();
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 </script>
 {% endblock %}
