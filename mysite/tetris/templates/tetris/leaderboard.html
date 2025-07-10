@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container card">
+    <h2>Tetris Leaderboard</h2>
+    <ol>
+      {% for score in scores %}
+        <li>{{ score.user.username if score.user else "Anonymous" }}: {{ score.score }}</li>
+      {% endfor %}
+    </ol>
+  </div>
+{% endblock %}
