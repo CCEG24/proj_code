@@ -15,15 +15,16 @@
       <button class="btn" onclick="playerDrop()">↓</button>
       <button class="btn" onclick="playerMove(1)">→</button>
       <button class="btn" onclick="playerRotate(1)">⟳</button>
-    </div>
-    <a href="{% url 'tetris:leaderboard' %}" class="btn">Leaderboard</a>
-  </div>
+
   <div>
     <p>How to play:</p>
     <p>Use the arrow keys to move the tetris piece.</p>
     <p>Use the q and w keys to rotate the tetris piece.</p>
     <p>Use the p key to pause the game.</p>
     <p>Use the down arrow key to drop the tetris piece.</p>
+  </div>
+  </div>
+    <a href="{% url 'tetris:leaderboard' %}" class="btn">Leaderboard</a>
   </div>
 </div>
 <script>
