@@ -224,7 +224,7 @@
 
   function updateDropInterval() {
     // Make speed increase more significant: decrease by 100ms per 100 points, min 100ms
-    dropInterval = Math.max(100, 1000 - Math.floor(score / 100) * 100);
+    dropInterval = Math.max(100, 1000 - Math.floor(score / 100) * 200);
   }
 
   function update(time = 0) {
