@@ -29,6 +29,7 @@
   </div>
   </div>
     <a href="{% url 'tetris:leaderboard' %}" class="btn">Leaderboard</a>
+    <button id="restartBtn" class="btn" style="width:100%; margin-top:10px;" onclick="restartGame()">Restart</button>
   </div>
 </div>
 <script>
@@ -207,13 +208,23 @@
     }
   }
 
+  function restartGame() {
+    score = 0;
+    updateScore();
+    dropInterval = 1000;
+    playerReset();
+    isPaused = false;
+    if (pauseBtn) pauseBtn.innerText = "Pause";
+    update();
+  }
+
   let dropCounter = 0;
   let dropInterval = 1000;
   let lastTime = 0;
 
   function updateDropInterval() {
-    // Example: decrease interval by 50ms for every 100 points, minimum 100ms
-    dropInterval = Math.max(100, 1000 - Math.floor(score / 100) * 50);
+    // Make speed increase more significant: decrease by 100ms per 100 points, min 100ms
+    dropInterval = Math.max(100, 1000 - Math.floor(score / 100) * 100);
   }
 
   function update(time = 0) {
@@ -255,6 +266,7 @@
     else if (event.key === 'q') playerRotate(-1);
     else if (event.key === 'w') playerRotate(1);
     else if (event.key === 'p') togglePause();
+    else if (event.key === 'r' || event.key === 'R') restartGame();
   });
 
   playerReset();
