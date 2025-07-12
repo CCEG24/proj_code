@@ -212,6 +212,7 @@
     score = 0;
     updateScore();
     dropInterval = 1000;
+    arena.forEach(row => row.fill(0));
     playerReset();
     isPaused = false;
     if (pauseBtn) pauseBtn.innerText = "Pause";
