@@ -270,6 +270,13 @@
     else if (event.key === 'r' || event.key === 'R') restartGame();
   });
 
+  document.querySelectorAll('button, .btn').forEach(btn => {
+    btn.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      this.click();
+    });
+  });
+
   playerReset();
   update();
   updateScore();
