@@ -75,6 +75,7 @@
       score += rowCount * 10;
       rowCount *= 2;
     }
+    updateDropInterval();
   }
 
   function collide(arena, player) {
@@ -209,6 +210,11 @@
   let dropCounter = 0;
   let dropInterval = 1000;
   let lastTime = 0;
+
+  function updateDropInterval() {
+    // Example: decrease interval by 50ms for every 100 points, minimum 100ms
+    dropInterval = Math.max(100, 1000 - Math.floor(score / 100) * 50);
+  }
 
   function update(time = 0) {
     if (isPaused) return;
