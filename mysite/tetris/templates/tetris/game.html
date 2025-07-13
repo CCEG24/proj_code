@@ -13,6 +13,10 @@
     <h2 style="text-align:center;">Tetris</h2>
     <div id="score">Score: 0</div>
     <div id="highScore">High Score: 0</div>
+    <div id="nextBlockContainer" style="text-align:center; margin-bottom:10px;">
+      <span>Next:</span>
+      <canvas id="nextBlock" width="80" height="80" style="background:#222; display:inline-block; vertical-align:middle;"></canvas>
+    </div>
     <canvas id="tetris" width="240" height="400" style="display:block; margin: 0 auto;"></canvas>
     <div class="controls" style="text-align:center; margin-top: 10px;">
       <button class="btn" onclick="playerMove(-1)">←</button>
