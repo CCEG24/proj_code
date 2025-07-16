@@ -9,6 +9,7 @@
     <div class="profile-info">
         <h2>Account Information</h2>
         <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Email:</strong> {{ email }}</p>
         <p><strong>Date Joined:</strong> {{ date_joined }}</p>
         <p><strong>Last Login:</strong> {{ last_login }}</p>
         {% if is_superuser %}
@@ -32,6 +33,28 @@
                 {% csrf_token %}
                 {{ password_form.as_p }}
                 <button type="submit" name="change_password" class="btn">Change Password</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h3>Update Email</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ email_form.as_p }}
+                <button type="submit" name="update_email" class="btn">Update Email</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h3>Email Verification</h3>
+            <form method="post" action="{% url 'accounts:send_verification_code' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Send Verification Code</button>
+            </form>
+            <form method="post" action="{% url 'accounts:verify_code' %}" style="margin-top:10px;">
+                {% csrf_token %}
+                {{ verify_code_form.as_p }}
+                <button type="submit" class="btn">Verify Code</button>
             </form>
         </div>
     </div>

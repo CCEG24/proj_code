@@ -4,6 +4,7 @@ from django.http import Http404
 from .models import Thread, Post
 from .forms import PostForm, ThreadForm
 from django.db import models
+from django.contrib import messages
 
 # Create your views here.
 
@@ -28,7 +29,11 @@ def thread_detail(request, pk):
     else:
         return redirect('accounts:login')
 
+    # Restrict posting to verified users
     if request.method == 'POST':
+        if not request.user.profile.is_email_verified:
+            messages.error(request, 'You must verify your email to post in the forums.')
+            return redirect('forums:thread_detail', pk=thread.pk)
         form = PostForm(request.POST)
         if form.is_valid():
             new_post = form.save(commit=False)
@@ -42,7 +47,6 @@ def thread_detail(request, pk):
                         new_post.parent = Post.objects.get(pk=parent_id)
                     except Post.DoesNotExist:
                         pass # Or handle invalid parent_id
-
             new_post.save()
             return redirect('forums:thread_detail', pk=thread.pk)
     else:
@@ -56,6 +60,10 @@ def thread_detail(request, pk):
 
 @login_required
 def create_thread(request):
+    # Restrict thread creation to verified users
+    if not request.user.profile.is_email_verified:
+        messages.error(request, 'You must verify your email to create a thread.')
+        return redirect('forums:forum_list')
     if request.method == 'POST':
         form = ThreadForm(request.POST)
         if form.is_valid():
@@ -65,5 +73,4 @@ def create_thread(request):
             return redirect('forums:forum_list') # Redirect to the forum list after creating a thread
     else:
         form = ThreadForm()
-
     return render(request, 'forums/create_thread.html', {'form': form})

@@ -8,6 +8,7 @@ from django.views.decorators.cache import cache_page
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 def logout(request):
     # Clear any session-related data before logging out
@@ -41,6 +42,14 @@ class ResultsView(generic.DetailView):
 @login_required
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+
+    # Restrict voting to verified users
+    if not request.user.profile.is_email_verified:
+        messages.error(request, 'You must verify your email to vote in polls.')
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': 'You must verify your email to vote in polls.',
+        })
 
     # Check if the user has already voted on this question
     if Vote.objects.filter(user=request.user, question=question).exists():
