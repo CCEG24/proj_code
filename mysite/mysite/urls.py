@@ -29,4 +29,5 @@ urlpatterns = [
     path('question_bot/', include('question_bot.urls')),
     path('bulletin/', include(('bulletin.urls', 'bulletin'), namespace='bulletin')),
     path('tetris/', include(('tetris.urls', 'tetris'), namespace='tetris')),
+    path('arcade/', include(('arcade.urls', 'arcade'), namespace='arcade')),
 ]

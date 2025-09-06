@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'question_bot',
     'bulletin',
     'tetris.apps.TetrisConfig',
+    'arcade.apps.ArcadeConfig',
 ]
 
 MIDDLEWARE = [

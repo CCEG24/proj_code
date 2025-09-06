@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #2d662d;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            margin-top: 10px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-links a:hover {
+            background-color: #1e4b1e;
+        }
+        .welcome-text {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h2 {
+            color: #2d662d;
+            margin-top: 0;
+        }
+        .card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .card a {
+            display: inline-block;
+            background-color: #2d662d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .card a:hover {
+            background-color: #1e4b1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        {% if user.is_authenticated %}
+            <p class="welcome-text">Welcome back, {{ user.username }}!</p>
+        {% endif %}
+        <h1>Welcome to the Arcade</h1>
+        <p>Play the different games available</p>
+    </div>
+
+    <div class="container">
+        <div class="card-container">
+            <div class="card">
+                <h2>Tetris Game</h2>
+                <p>Play a classic game of Tetris right in your browser!</p>
+                <a href="{% url 'tetris:index' %}">Play Tetris</a>
+            </div>
+            <!-- Add more cards here as you create new features -->
+        </div>
+    </div>
+</body>
+</html> 
