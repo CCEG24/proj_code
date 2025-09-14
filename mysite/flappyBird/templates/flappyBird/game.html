@@ -31,6 +31,9 @@
 
 <div class="game-container">
     <p class="game-instructions">Click or tap to make the bird flap! Avoid the pipes!</p>
+    <div style="margin-bottom: 10px;">
+        <a href="{% url 'flappyBird:leaderboard' %}" style="color: white; text-decoration: none; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px;">View Leaderboard</a>
+    </div>
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 
 <script>
@@ -59,18 +62,63 @@
   const birdColor = "#FFD700";
   const pipeColor = "#228B22";
 
-  function resetGame() {
-    if (score > highScore) {
-      highScore = score;
-      localStorage.setItem("highScore", highScore);
-    }
-    birdY = 200;
-    birdVelocity = 0;
-    pipes = [];
-    score = 0;
-    gameOver = false;
-    frames = 0;
-  }
+  function resetGame() {
+    if (score > highScore) {
+      highScore = score;
+      localStorage.setItem("highScore", highScore);
+    }
+    
+    // Save score to database if it's a new high score
+    if (score > 0) {
+      saveScoreToDatabase(score);
+    }
+    
+    birdY = 200;
+    birdVelocity = 0;
+    pipes = [];
+    score = 0;
+    gameOver = false;
+    frames = 0;
+  }
+  
+  function saveScoreToDatabase(score) {
+    {% if user.is_authenticated %}
+      // User is signed in, use their username
+      const playerName = "{{ user.username }}";
+      saveScore(playerName, score);
+    {% else %}
+      // User is not signed in, prompt for name
+      const playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
+      if (playerName !== null) {
+        saveScore(playerName, score);
+      }
+    {% endif %}
+  }
+  
+  function saveScore(playerName, score) {
+    fetch("{% url 'flappyBird:save_score' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({
+        player_name: playerName,
+        score: score
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        console.log("Score saved successfully!");
+      } else {
+        console.error("Failed to save score:", data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Error saving score:", error);
+    });
+  }
 
   function flap() {
     if (gameOver) {
