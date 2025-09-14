@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block title %}Poll Results{% endblock %}
+{% block header %}Poll Results{% endblock %}
 <head>
     <title>Poll Results</title>
     <style>
@@ -75,7 +77,7 @@
         }
     </style>
 </head>
-<body>
+{% block content %}
     <div class="header">
         <h1>Poll Results</h1>
         <p>See how others voted</p>
@@ -98,5 +100,5 @@
         </div>
         <a href="{% url 'polls:index' %}" class="back-link">← Back to Polls</a>
     </div>
-</body>
+{% endblock %}
 </html>
