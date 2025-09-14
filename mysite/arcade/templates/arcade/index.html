@@ -1,19 +1,55 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
 
 {% block title %}Arcade{% endblock %}
 {% block header %}Arcade{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="card-container">
-            <div class="card">
-                <h2>Tetris Game</h2>
-                <p>Play a classic game of Tetris right in your browser!</p>
-                <a href="{% url 'tetris:game' %}">Play Tetris</a>
-            </div>
-            <!-- Add more cards here as you create new features -->
-        </div>
+<style>
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    .card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        margin-bottom: 0;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card h2 {
+        color: #2d662d;
+        margin-top: 0;
+    }
+    .card p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+    .card a {
+        display: inline-block;
+        background-color: #2d662d;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    .card a:hover {
+        background-color: #1e4b1e;
+    }
+</style>
+
+<div class="card-container">
+    <div class="card">
+        <h2>Tetris Game</h2>
+        <p>Play a classic game of Tetris right in your browser!</p>
+        <a href="{% url 'tetris:game' %}">Play Tetris</a>
     </div>
+    <!-- Add more cards here as you create new features -->
+</div>
 {% endblock %}
-</html>
