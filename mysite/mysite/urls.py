@@ -30,4 +30,5 @@ urlpatterns = [
     path('bulletin/', include(('bulletin.urls', 'bulletin'), namespace='bulletin')),
     path('tetris/', include(('tetris.urls', 'tetris'), namespace='tetris')),
     path('arcade/', include(('arcade.urls', 'arcade'), namespace='arcade')),
+    path('flappybird/', include(('flappyBird.urls', 'flappyBird'), namespace='flappyBird')),
 ]
