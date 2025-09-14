@@ -88,11 +88,6 @@
     </style>
 </head>
 {% block content %}
-    <div class="header">
-        <h1>Poll Details</h1>
-        <p>Cast your vote</p>
-    </div>
-
     <div class="container">
         <div class="poll-detail">
             <h2 class="poll-question">{{ question.question_text }}</h2>
@@ -118,7 +113,6 @@
                 <input type="submit" value="Vote" class="submit-button">
     </form>
         </div>
-        <a href="{% url 'polls:index' %}" class="back-link">← Back to Polls</a>
     </div>
 {% endblock %}
 </html>
