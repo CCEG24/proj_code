@@ -42,7 +42,7 @@
 
   // Constants
   const GRAVITY = 0.5;
-  const FLAP = -10;
+  const FLAP = -5;
   const PIPE_WIDTH = 50;
   const PIPE_GAP = 170;
   const PIPE_SPACING = 130;
@@ -68,11 +68,6 @@
       localStorage.setItem("highScore", highScore);
     }
     
-    // Save score to database if it's a new high score
-    if (score > 0) {
-      saveScoreToDatabase(score);
-    }
-    
     birdY = 200;
     birdVelocity = 0;
     pipes = [];
@@ -82,17 +77,16 @@
   }
   
   function saveScoreToDatabase(score) {
+    let playerName;
     {% if user.is_authenticated %}
-      // User is signed in, use their username
-      const playerName = "{{ user.username }}";
-      saveScore(playerName, score);
+    playerName = "{{ user.username }}";
     {% else %}
-      // User is not signed in, prompt for name
-      const playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
-      if (playerName !== null) {
-        saveScore(playerName, score);
-      }
+    playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
     {% endif %}
+    
+    if (playerName !== null) {
+      saveScore(playerName, score);
+    }
   }
   
   function saveScore(playerName, score) {
@@ -161,14 +155,18 @@
     for (let pipe of pipes) {
       pipe.x -= PIPE_SPEED;
 
-      // Collision detection
-      if (
-        80 + BIRD_SIZE > pipe.x &&
-        80 < pipe.x + PIPE_WIDTH &&
-        (birdY < pipe.top || birdY + BIRD_SIZE > pipe.top + PIPE_GAP)
-      ) {
-        gameOver = true;
-      }
+      // Collision detection
+      if (
+        80 + BIRD_SIZE > pipe.x &&
+        80 < pipe.x + PIPE_WIDTH &&
+        (birdY < pipe.top || birdY + BIRD_SIZE > pipe.top + PIPE_GAP)
+      ) {
+        gameOver = true;
+        // Save score when bird hits pipe
+        if (score > 0) {
+          saveScoreToDatabase(score);
+        }
+      }
 
       // Score update
       if (!pipe.passed && pipe.x + PIPE_WIDTH < 80) {
@@ -189,9 +187,13 @@
     birdVelocity += GRAVITY;
     birdY += birdVelocity;
 
-    if (birdY + BIRD_SIZE > canvas.height || birdY < 0) {
-      gameOver = true;
-    }
+    if (birdY + BIRD_SIZE > canvas.height || birdY < 0) {
+      gameOver = true;
+      // Save score when game ends
+      if (score > 0) {
+        saveScoreToDatabase(score);
+      }
+    }
 
     if (!gameOver) {
       updatePipes();
