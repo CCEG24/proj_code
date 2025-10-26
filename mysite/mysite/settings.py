@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'tetris.apps.TetrisConfig',
     'arcade.apps.ArcadeConfig',
     'flappyBird.apps.FlappybirdConfig',
+    'mc.apps.McConfig',
 ]
 
 MIDDLEWARE = [
