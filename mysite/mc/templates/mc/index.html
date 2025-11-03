@@ -1,5 +1,88 @@
-<p>/give @player minecraft:diamond_sword</p>
-<p>/excecute @player minecraft:give @player minecraft:diamond_sword</p>
-<p>/scoreboard objectives add test dummy</p>
-<p>/scoreboard players set @p test 1</p>
-<p>/scoreboard objectives setdisplay sidebar test</p>
+{% extends "base.html" %}
+{% block title %}Minecraft Commands{% endblock %}
+{% block header %}Minecraft Server Commands{% endblock %}
+{% block content %}
+    <div class="card">
+        <p>Common, useful commands for managing or testing on the server. Replace selectors like <code>@p</code> or names as needed.</p>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="text-align:left; border-bottom: 1px solid #eee;">
+                        <th style="padding: 10px;">Command</th>
+                        <th style="padding: 10px;">What it does</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 10px;"><code>/tp &lt;target&gt; &lt;destination&gt;</code></td>
+                        <td style="padding: 10px;">Teleport a player/entity to another player/entity or coordinates.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/gamemode creative|survival|adventure|spectator [player]</code></td>
+                        <td style="padding: 10px;">Change gamemode for yourself or another player.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/give &lt;player&gt; minecraft:diamond_sword{Enchantments:[{id:sharpness,lvl:5}]}</code></td>
+                        <td style="padding: 10px;">Give an item (with optional NBT like enchantments).</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/time set day|night|noon|midnight</code></td>
+                        <td style="padding: 10px;">Set the world time quickly.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/weather clear|rain|thunder [duration]</code></td>
+                        <td style="padding: 10px;">Control the weather.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/difficulty peaceful|easy|normal|hard</code></td>
+                        <td style="padding: 10px;">Change world difficulty.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/spawnpoint [player] [x] [y] [z]</code></td>
+                        <td style="padding: 10px;">Set a player's respawn point.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/setworldspawn [x] [y] [z]</code></td>
+                        <td style="padding: 10px;">Set the global world spawn location.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/effect give &lt;player&gt; minecraft:speed 60 1 true</code></td>
+                        <td style="padding: 10px;">Apply a status effect (60s Speed II, hide particles).</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/summon minecraft:villager ~ ~ ~</code></td>
+                        <td style="padding: 10px;">Summon an entity at your location.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/locate structure minecraft:village</code></td>
+                        <td style="padding: 10px;">Find nearest structure and coordinates.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/title @a title {"text":"Welcome!","color":"green"}</code></td>
+                        <td style="padding: 10px;">Show a title to players.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/scoreboard objectives add points dummy "Points"</code></td>
+                        <td style="padding: 10px;">Create a simple scoreboard objective.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/scoreboard objectives setdisplay sidebar points</code></td>
+                        <td style="padding: 10px;">Display the objective on the sidebar.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/scoreboard players set @p points 1</code></td>
+                        <td style="padding: 10px;">Set a player's score value.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/whitelist add &lt;player&gt;</code></td>
+                        <td style="padding: 10px;">Add a player to the server whitelist (if enabled).</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><code>/op &lt;player&gt;</code></td>
+                        <td style="padding: 10px;">Grant operator permissions to a player.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
