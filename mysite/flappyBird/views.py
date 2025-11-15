@@ -9,9 +9,21 @@ def game(request):
     return render(request, 'flappyBird/game.html')
 
 def leaderboard(request):
-    scores = FlappyBirdScore.objects.all()[:10]  # Top 10 scores
+    # Get all scores, ordered by score descending, then by date
+    # Get unique scores by converting to a set of IDs first, then fetching those records
+    all_scores = FlappyBirdScore.objects.all().order_by('-score', 'created_at')
+    # Get unique score IDs to avoid duplicates
+    seen_ids = set()
+    unique_scores = []
+    for score in all_scores:
+        if score.id not in seen_ids:
+            seen_ids.add(score.id)
+            unique_scores.append(score)
+            if len(unique_scores) >= 10:
+                break
+    
     context = {
-        'scores': scores,
+        'scores': unique_scores,
     }
     return render(request, 'flappyBird/leaderboard.html', context)
 

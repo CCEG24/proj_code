@@ -49,15 +49,16 @@
   const PIPE_SPEED = 1.5;
   const BIRD_SIZE = 30;
 
-  // Game state
-  let birdY = 200;
-  let birdVelocity = 0;
-  let pipes = [];
-  let score = 0;
-  let highScore = parseInt(localStorage.getItem("highScore")) || 0;
-  let gameOver = false;
-  let frames = 0;
-  let flapQueued = false;
+  // Game state
+  let birdY = 200;
+  let birdVelocity = 0;
+  let pipes = [];
+  let score = 0;
+  let highScore = parseInt(localStorage.getItem("highScore")) || 0;
+  let gameOver = false;
+  let scoreSaved = false;  // Track if score has been saved to prevent duplicates
+  let frames = 0;
+  let flapQueued = false;
 
   const birdColor = "#FFD700";
   const pipeColor = "#228B22";
@@ -73,6 +74,7 @@
     pipes = [];
     score = 0;
     gameOver = false;
+    scoreSaved = false;  // Reset score saved flag
     frames = 0;
   }
   
@@ -167,9 +169,10 @@
         (birdY < pipe.top || birdY + BIRD_SIZE > pipe.top + PIPE_GAP)
       ) {
         gameOver = true;
-        // Save score when bird hits pipe
-        if (score > 0) {
+        // Save score when bird hits pipe (only once)
+        if (score > 0 && !scoreSaved) {
           saveScoreToDatabase(score);
+          scoreSaved = true;
         }
       }
 
@@ -194,9 +197,10 @@
 
     if (birdY + BIRD_SIZE > canvas.height || birdY < 0) {
       gameOver = true;
-      // Save score when game ends
-      if (score > 0) {
+      // Save score when game ends (only once)
+      if (score > 0 && !scoreSaved) {
         saveScoreToDatabase(score);
+        scoreSaved = true;
       }
     }
 
