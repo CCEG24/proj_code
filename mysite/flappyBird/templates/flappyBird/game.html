@@ -81,7 +81,12 @@
     {% if user.is_authenticated %}
     playerName = "{{ user.username }}";
     {% else %}
-    playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
+    save = prompt("Save score to leaderboard? (y/n)");
+    if (save === "y") {
+      playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
+    } else {
+      playerName = null;
+    }
     {% endif %}
     
     if (playerName !== null) {
