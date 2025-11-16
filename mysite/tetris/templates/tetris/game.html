@@ -197,7 +197,11 @@
       // --- POST score to Django ---
       save = prompt("Save score to leaderboard? (y/n)");
       if (save === "y") {
-        playerName = "{{ user.username }}";
+        if ({% if user.is_authenticated %}) {
+          playerName = "{{ user.username }}";
+        } else {
+          playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
+        }
       } else {
         playerName = null;
       }
