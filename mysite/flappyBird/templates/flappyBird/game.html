@@ -80,16 +80,21 @@
   
   function saveScoreToDatabase(score) {
     let playerName;
-    {% if user.is_authenticated %}
-    playerName = "{{ user.username }}";
-    {% else %}
-    save = prompt("Save score to leaderboard? (y/n)");
-    if (save === "y") {
-      playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
+    if ({% if user.is_authenticated %}) {
+      save = prompt("Save score to leaderboard? (y/n)");
+      if (save === "y") {
+        playerName = "{{ user.username }}";
+      } else {
+        playerName = null;
+      }
     } else {
-      playerName = null;
+      save = prompt("Save score to leaderboard? (y/n)");
+      if (save === "y") {
+      playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
+      } else {
+        playerName = null;
+      }
     }
-    {% endif %}
     
     if (playerName !== null) {
       saveScore(playerName, score);

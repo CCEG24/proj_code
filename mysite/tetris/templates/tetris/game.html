@@ -195,14 +195,22 @@
       arena.forEach(row => row.fill(0));
       saveHighScore();
       // --- POST score to Django ---
-      fetch('/tetris/submit_score/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: 'score=' + encodeURIComponent(score)
-      });
+      save = prompt("Save score to leaderboard? (y/n)");
+      if (save === "y") {
+        playerName = "{{ user.username }}";
+      } else {
+        playerName = null;
+      }
+      if (playerName !== null) {
+        fetch('/tetris/submit_score/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: 'score=' + encodeURIComponent(score) + '&player_name=' + encodeURIComponent(playerName)
+        });
+      }
       score = 0;
       updateScore();
       alert("Game Over!");
