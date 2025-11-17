@@ -104,9 +104,9 @@
                 {% for score in scores %}
                     <tr>
                         <td class="rank">{{ forloop.counter }}</td>
-                        <td class="player-name">{{ score.player_name }}</td>
+                        <td class="player-name">{{ score.user }}</td>
                         <td class="score">{{ score.score }}</td>
-                        <td class="date">{{ score.created_at|date:"M d, Y" }}</td>
+                        <td class="date">{{ score.date|date:"M d, Y" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
