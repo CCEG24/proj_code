@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
   <h2>Upload Bulletin PDF</h2>
+  <p>Upload the weekly bulletin here and it will be parsed and translated
+    into an ICS file which will be downloaded for you to upload directly 
+    into your calendar (will only work for KES bulletin).</p>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
