@@ -149,7 +149,7 @@
             </form>
         </div>
 
-        <div class="comment-list">
+        <div class="comment-list" id="comment-list">
             <h2>Comments</h2>
             {% if comments %}
                 {% for comment in comments %}
@@ -164,19 +164,76 @@
          <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
 
     <script>
-        // Basic JavaScript to toggle reply form visibility (can be enhanced later)
-        document.addEventListener('DOMContentLoaded', function() {
-            const replyLinks = document.querySelectorAll('.reply-link');
+        function bindReplyLinks(root) {
+            const replyLinks = root.querySelectorAll('.reply-link');
             replyLinks.forEach(link => {
+                if (link.dataset.bound === 'true') {
+                    return;
+                }
+
+                link.dataset.bound = 'true';
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const commentItem = this.closest('.comment-item');
-                    const replyForm = commentItem.querySelector('.reply-form');
+                    const replyForm = commentItem ? commentItem.querySelector('.reply-form') : null;
                     if (replyForm) {
                         replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
                     }
                 });
             });
+        }
+
+        function shouldPauseAutoRefresh() {
+            const activeElement = document.activeElement;
+            if (!activeElement) {
+                return false;
+            }
+
+            const tagName = activeElement.tagName;
+            const isTypingField = tagName === 'TEXTAREA' || tagName === 'INPUT';
+            return isTypingField;
+        }
+
+        async function refreshComments() {
+            if (document.hidden || shouldPauseAutoRefresh()) {
+                return;
+            }
+
+            const currentList = document.getElementById('comment-list');
+            if (!currentList) {
+                return;
+            }
+
+            try {
+                const response = await fetch(window.location.href, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    cache: 'no-store',
+                });
+                if (!response.ok) {
+                    return;
+                }
+
+                const html = await response.text();
+                const doc = new DOMParser().parseFromString(html, 'text/html');
+                const newList = doc.getElementById('comment-list');
+
+                if (newList && currentList.innerHTML !== newList.innerHTML) {
+                    currentList.innerHTML = newList.innerHTML;
+                    bindReplyLinks(currentList);
+                }
+            } catch (error) {
+                console.debug('Comment auto-refresh failed:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const list = document.getElementById('comment-list');
+            if (!list) {
+                return;
+            }
+
+            bindReplyLinks(list);
+            setInterval(refreshComments, 5000);
         });
     </script>
 {% endblock %}

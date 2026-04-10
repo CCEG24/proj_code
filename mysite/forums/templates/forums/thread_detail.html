@@ -9,7 +9,7 @@
 <h1>{{ thread.title }}</h1>
 <p>Started by {{ thread.user.username }} on {{ thread.created_at|date:"F j, Y, P" }}</p>
 
-<div class="posts">
+<div class="posts" id="thread-posts">
     {% for post in posts %}
         {% include 'forums/includes/post.html' with post=post form=form %}
     {% endfor %}
@@ -34,4 +34,77 @@
 </p>
 
 </div>
+
+<script>
+    function bindReplyLinks(root) {
+        const replyLinks = root.querySelectorAll('.reply-link');
+        replyLinks.forEach(link => {
+            if (link.dataset.bound === 'true') {
+                return;
+            }
+
+            link.dataset.bound = 'true';
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const commentItem = this.closest('.comment-item');
+                const replyForm = commentItem ? commentItem.querySelector('.reply-form') : null;
+                if (replyForm) {
+                    replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+        });
+    }
+
+    function shouldPauseAutoRefresh() {
+        const activeElement = document.activeElement;
+        if (!activeElement) {
+            return false;
+        }
+
+        const tagName = activeElement.tagName;
+        return tagName === 'TEXTAREA' || tagName === 'INPUT';
+    }
+
+    async function refreshThreadPosts() {
+        if (document.hidden || shouldPauseAutoRefresh()) {
+            return;
+        }
+
+        const currentPosts = document.getElementById('thread-posts');
+        if (!currentPosts) {
+            return;
+        }
+
+        try {
+            const response = await fetch(window.location.href, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                cache: 'no-store',
+            });
+            if (!response.ok) {
+                return;
+            }
+
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const newPosts = doc.getElementById('thread-posts');
+
+            if (newPosts && currentPosts.innerHTML !== newPosts.innerHTML) {
+                currentPosts.innerHTML = newPosts.innerHTML;
+                bindReplyLinks(currentPosts);
+            }
+        } catch (error) {
+            console.debug('Thread auto-refresh failed:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const posts = document.getElementById('thread-posts');
+        if (!posts) {
+            return;
+        }
+
+        bindReplyLinks(posts);
+        setInterval(refreshThreadPosts, 10000);
+    });
+</script>
 {% endblock %}
