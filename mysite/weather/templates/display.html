@@ -1,26 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Weather Data</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            background-color: #2d662d;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
+{% extends "base.html" %}
+
+{% block title %}Weather Data{% endblock %}
+
+{% block header %}Weather Data for {{ location }}{% endblock %}
+
+{% block extra_head %}
+<style>
         .weather-plot {
             text-align: center;
             margin: 20px 0;
@@ -121,14 +106,11 @@
             color: #1e4b1e;
         }
     </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Weather Data for {{ location }}</h1>
-        <p>Detailed weather information and statistics</p>
-    </div>
+{% endblock %}
 
-    <div class="container">
+{% block content %}
+        <p>Detailed weather information and statistics</p>
+
         {% if error %}
             <div class="error">
                 {{ error }}
@@ -213,6 +195,4 @@
         {% endif %}
         <a href="{% url 'home:index' %}" class="back-link">← Back to Home</a>
         <p>Disclaimer: Data may not be accurate.</p>
-    </div>
-</body>
-</html>
+{% endblock %}

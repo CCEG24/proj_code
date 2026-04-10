@@ -1,20 +1,19 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
-{% block title %}Polls{% endblock %}
-{% block header %}Polls{% endblock %}
-{% block content %}
 
-    <div class="container">
-        <div class="poll-list">
+{% block title %}Polls{% endblock %}
+
+{% block header %}Polls{% endblock %}
+
+{% block content %}
+<div class="poll-list">
 {% if latest_question_list %}
     {% for question in latest_question_list %}
-                    <div class="poll-item">
-                        <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
-                    </div>
+        <div class="poll-item">
+            <a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a>
+        </div>
     {% endfor %}
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
-        </div>
+</div>
 {% endblock %}
-</html>

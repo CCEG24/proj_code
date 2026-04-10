@@ -14,22 +14,30 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
-
-# Load environment variables from .env file
-load_dotenv()
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .secrets/.env first, then local .env fallback.
+SECRETS_ENV_PATH = BASE_DIR.parent.parent / '.secrets' / '.env'
+load_dotenv(dotenv_path=SECRETS_ENV_PATH)
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = 'django-insecure-local-dev-key-change-in-production'
+    else:
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must be set when DEBUG is False.')
 
 # Get allowed hosts from environment variable
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
