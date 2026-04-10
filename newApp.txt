@@ -1,0 +1,13 @@
+TODO WHEN ADDING A NEW APP
+1- python manage.py startapp <appName>
+2- register app in settings.py (INSTALLED_APPS)
+3- update <appName>/urls.py (urlpatterns, appname)
+4- update mysite/urls.py (add path("<pathToApp>/", include("<appName>.urls")))
+5- update <appName>/views.py (add at least one view, for example return render(..., ...))
+6- create templates folder inside mysite/<appName>
+7- add any required models in <appName>/models.py
+8- update <appName>/admin.py for all models
+9- run migrations (python mysite/manage.py makemigrations
+                   python mysite/manage.py migrate)
+10- add any forms and tests in <appName>/forms.py and <appName>/test.py
+11- test (python manage.py runserver and then go to http://127.0.0.1)
