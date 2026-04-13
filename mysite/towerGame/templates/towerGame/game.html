@@ -9,6 +9,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token }}" />
   <style>
     body {
       font-family: sans-serif;
@@ -167,12 +168,43 @@
       const tower3 = document.getElementById("tower3");
       if (tower3.querySelectorAll(".disk").length === difficulty) {
         const minMoves = Math.pow(2, difficulty) - 1;
+        let winMsg = "You won! 🎉";
         if (moveCount === minMoves) {
-          document.getElementById("winMessage").innerText = "Well done for doing it in the least moves possible!";
-        } else {
-          document.getElementById("winMessage").innerText = "You won! 🎉";
+          winMsg = "Well done for doing it in the least moves possible!";
         }
+        document.getElementById("winMessage").innerText = winMsg;
+        submitScore(moveCount, difficulty);
       }
+    }
+
+    function submitScore(moves, diff) {
+      const playerName = prompt("Enter your name for the leaderboard:", "Player");
+      if (playerName === null) return;
+      
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      
+      fetch('{% url "towerGame:submit_score" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
+          player_name: playerName,
+          moves: moves,
+          difficulty: diff
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Score saved:', data.message);
+          document.getElementById("winMessage").innerText += " (Score saved!)";
+        } else {
+          console.error('Failed to save score:', data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
     }
 
     startGame();

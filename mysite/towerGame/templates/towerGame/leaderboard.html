@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Tower of Hanoi Leaderboard{% endblock %}
+{% block header %}Tower of Hanoi Leaderboard{% endblock %}
+
+{% block content %}
+<style>
+  .leaderboard-wrap {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+  }
+
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #ececec;
+    text-align: left;
+  }
+
+  .leaderboard-table th {
+    background: #2d662d;
+    color: white;
+    font-weight: 600;
+  }
+
+  .leaderboard-table tbody tr:nth-child(even) {
+    background: #f9fbf9;
+  }
+
+  .leaderboard-table tbody tr:hover {
+    background: #eef6ee;
+  }
+
+  .leaderboard-empty {
+    padding: 20px;
+    margin-bottom: 16px;
+    background: #f7faf7;
+    border: 1px solid #dce8dc;
+    border-radius: 8px;
+    color: #2b4b2b;
+  }
+
+  .leaderboard-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 800px) {
+    .leaderboard-table th,
+    .leaderboard-table td {
+      padding: 9px 6px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% if scores %}
+  <div class="leaderboard-wrap">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Moves</th>
+          <th>Difficulty</th>
+          <th>Optimal</th>
+          <th>Wasted</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for score in scores %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ score.player_name }}</td>
+            <td>{{ score.moves }}</td>
+            <td>{{ score.difficulty }}</td>
+            <td>{{ score.optimal_moves }}</td>
+            <td>{{ score.wasted_moves }}</td>
+            <td>{{ score.created_at|date:"Y-m-d H:i" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="leaderboard-empty">
+    No scores yet. Finish a game and submit a score to appear on the leaderboard.
+  </div>
+{% endif %}
+
+<div class="leaderboard-actions">
+  <a class="btn" href="{% url 'towerGame:index' %}">Back to Game</a>
+</div>
+{% endblock %}
