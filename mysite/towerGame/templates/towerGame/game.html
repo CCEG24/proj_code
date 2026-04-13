@@ -3,28 +3,9 @@
 {% block title %}Tower of Hanoi{% endblock %}
 {% block header %}Tower of Hanoi{% endblock %}
 
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block extra_head %}
   <meta name="csrf-token" content="{{ csrf_token }}" />
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      background: #f0f0f0;
-    }
-    h1 {
-      margin-top: 10px;
-    }
     #controls {
       margin-bottom: 10px;
     }
@@ -73,10 +54,6 @@
     #winMessage { color: green; }
 
     @media (max-width: 600px) {
-      body {
-        padding: 10px;
-      }
-
       .disk {
         height: 24px;
         line-height: 24px;
@@ -88,25 +65,26 @@
       }
     }
   </style>
-</head>
-<body>
-    <p>Move all the disks from the left tower to the right tower to win!You can select the difficulty (number of disks) and try to solve 
-       it in the least moves possible! You can only move one disk at a time, and you cannot place a larger disk on top of a smaller one.
-       To move a disk, click on it and then click on the box you want to move it to.</p>
-  <div id="controls">
-    <label for="difficulty">Difficulty (Disks): </label>
-    <input type="number" id="difficulty" min="3" max="8" value="3" />
-    <button onclick="startGame()">Start Game</button>
-  </div>
-  <div id="game">
-    <div class="tower" id="tower1"></div>
-    <div class="tower" id="tower2"></div>
-    <div class="tower" id="tower3"></div>
-  </div>
-  <div id="moveCounter">Moves: 0</div>
-  <div id="winMessage"></div>
+{% endblock %}
 
-  <script>
+{% block content %}
+<p>Move all the disks from the left tower to the right tower to win! You can select the difficulty (number of disks) and try to solve 
+   it in the least moves possible! You can only move one disk at a time, and you cannot place a larger disk on top of a smaller one.
+   To move a disk, click on it and then click on the box you want to move it to.</p>
+<div id="controls">
+  <label for="difficulty">Difficulty (Disks): </label>
+  <input type="number" id="difficulty" min="3" max="8" value="3" />
+  <button onclick="startGame()">Start Game</button>
+</div>
+<div id="game">
+  <div class="tower" id="tower1"></div>
+  <div class="tower" id="tower2"></div>
+  <div class="tower" id="tower3"></div>
+</div>
+<div id="moveCounter">Moves: 0</div>
+<div id="winMessage"></div>
+
+<script>
     let selectedDisk = null;
     let difficulty = 3;
     let moveCount = 0;
@@ -213,6 +191,4 @@
 
     startGame();
   </script>
-</body>
-</html>
 {% endblock %}
