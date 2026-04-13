@@ -178,9 +178,13 @@
     }
 
     function submitScore(moves, diff) {
-      const playerName = prompt("Enter your name for the leaderboard:", "Player");
+      {% if user.is_authenticated %}
+      const playerName = "{{ user.username }}";
+      {% else %}
+        const playerName = prompt("Enter your name for the leaderboard:", "Player");
+      {% endif %}
       if (playerName === null) return;
-      
+
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       
       fetch('{% url "towerGame:submit_score" %}', {
