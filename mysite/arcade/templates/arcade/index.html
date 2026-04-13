@@ -58,6 +58,13 @@
         <a href="{% url 'flappyBird:game' %}">Play Flappy Bird</a>
         <a href="{% url 'flappyBird:leaderboard' %}" style="margin-left: 10px; background-color: #666;">Leaderboard</a>
     </div>
+
+    <div class="card">
+        <h2>Tower of Hanoi</h2>
+        <p>Move all the disks from the left tower to the right tower to win!</p>
+        <a href="{% url 'towerGame:index' %}">Play Tower of Hanoi</a>
+     </div>
     <!-- Add more cards here as you create new features -->
 </div>
+<p>Credits to Lionel (Sobinu) for making these games!</p>
 {% endblock %}

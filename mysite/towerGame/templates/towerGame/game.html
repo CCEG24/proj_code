@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Tower of Hanoi{% endblock %}
+{% block header %}Tower of Hanoi{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background: #f0f0f0;
+    }
+    h1 {
+      margin-top: 10px;
+    }
+    #controls {
+      margin-bottom: 10px;
+    }
+    #game {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      width: min(96vw, 1200px);
+      height: min(70vh, 680px);
+    }
+    .tower {
+      flex: 1;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      margin: 0 10px;
+      height: 100%;
+      position: relative;
+      background: #e0e0e0;
+      border-radius: 8px;
+    }
+    .disk {
+      height: 30px;
+      margin: 4px 0;
+      border-radius: 5px;
+      color: white;
+      text-align: center;
+      line-height: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .disk[data-size="1"] { background: #e74c3c; width: 50px; }
+    .disk[data-size="2"] { background: #f39c12; width: 70px; }
+    .disk[data-size="3"] { background: #f1c40f; width: 90px; }
+    .disk[data-size="4"] { background: #2ecc71; width: 110px; }
+    .disk[data-size="5"] { background: #1abc9c; width: 130px; }
+    .disk[data-size="6"] { background: #3498db; width: 150px; }
+    .disk[data-size="7"] { background: #9b59b6; width: 170px; }
+    .disk[data-size="8"] { background: #34495e; width: 190px; }
+
+    #winMessage, #moveCounter {
+      margin-top: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+    #winMessage { color: green; }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .disk {
+        height: 24px;
+        line-height: 24px;
+        font-size: 14px;
+      }
+
+      .tower {
+        margin: 0 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <p>Move all the disks from the left tower to the right tower to win!You can select the difficulty (number of disks) and try to solve 
+       it in the least moves possible! You can only move one disk at a time, and you cannot place a larger disk on top of a smaller one.
+       To move a disk, click on it and then click on the box you want to move it to.</p>
+  <div id="controls">
+    <label for="difficulty">Difficulty (Disks): </label>
+    <input type="number" id="difficulty" min="3" max="8" value="3" />
+    <button onclick="startGame()">Start Game</button>
+  </div>
+  <div id="game">
+    <div class="tower" id="tower1"></div>
+    <div class="tower" id="tower2"></div>
+    <div class="tower" id="tower3"></div>
+  </div>
+  <div id="moveCounter">Moves: 0</div>
+  <div id="winMessage"></div>
+
+  <script>
+    let selectedDisk = null;
+    let difficulty = 3;
+    let moveCount = 0;
+
+    function startGame() {
+      difficulty = parseInt(document.getElementById("difficulty").value);
+      document.getElementById("winMessage").innerText = "";
+      moveCount = 0;
+      updateMoveCounter();
+      ["tower1", "tower2", "tower3"].forEach(id => {
+        const tower = document.getElementById(id);
+        tower.innerHTML = "";
+      });
+      const tower1 = document.getElementById("tower1");
+      for (let i = difficulty; i >= 1; i--) {
+        const disk = document.createElement("div");
+        disk.classList.add("disk");
+        disk.dataset.size = i;
+        disk.innerText = i;
+        disk.onclick = () => selectDisk(disk);
+        tower1.appendChild(disk);
+      }
+    }
+
+    function selectDisk(disk) {
+      if (selectedDisk) {
+        selectedDisk.classList.remove("selected");
+      }
+      const tower = disk.parentElement;
+      const topDisk = tower.querySelector(".disk:last-of-type");
+      if (topDisk === disk) {
+        selectedDisk = disk;
+        selectedDisk.classList.add("selected");
+      }
+    }
+
+    document.querySelectorAll(".tower").forEach(tower => {
+      tower.addEventListener("click", () => {
+        if (selectedDisk) {
+          const towerDisks = tower.querySelectorAll(".disk");
+          const topDisk = towerDisks[towerDisks.length - 1];
+          if (!topDisk || parseInt(selectedDisk.dataset.size) < parseInt(topDisk.dataset.size)) {
+            tower.appendChild(selectedDisk);
+            selectedDisk.classList.remove("selected");
+            selectedDisk = null;
+            moveCount++;
+            updateMoveCounter();
+            checkWin();
+          }
+        }
+      });
+    });
+
+    function updateMoveCounter() {
+      document.getElementById("moveCounter").innerText = `Moves: ${moveCount}`;
+    }
+
+    function checkWin() {
+      const tower3 = document.getElementById("tower3");
+      if (tower3.querySelectorAll(".disk").length === difficulty) {
+        const minMoves = Math.pow(2, difficulty) - 1;
+        if (moveCount === minMoves) {
+          document.getElementById("winMessage").innerText = "Well done for doing it in the least moves possible!";
+        } else {
+          document.getElementById("winMessage").innerText = "You won! 🎉";
+        }
+      }
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
+{% endblock %}
