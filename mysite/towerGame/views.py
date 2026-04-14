@@ -11,7 +11,7 @@ def index(request):
 
 
 def leaderboard(request):
-    scores = TowerGameScore.objects.order_by('moves', '-difficulty', 'created_at')
+    scores = TowerGameScore.objects.order_by('wasted_moves', '-difficulty', 'created_at')
     score_rows = []
 
     for score in scores:
