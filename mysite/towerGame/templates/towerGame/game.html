@@ -68,6 +68,10 @@
 {% endblock %}
 
 {% block content %}
+<div id="towerGameConfig"
+  data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+  data-username="{{ user.username|escape }}"
+  hidden></div>
 <p>Move all the disks from the left tower to the right tower to win! You can select the difficulty (number of disks) and try to solve 
    it in the least moves possible! You can only move one disk at a time, and you cannot place a larger disk on top of a smaller one.
    To move a disk, click on it and then click on the box you want to move it to.</p>
@@ -158,12 +162,10 @@
     }
 
     function submitScore(moves, diff) {
-      let playerName;
-      {% if user.is_authenticated %}
-      playerName = "{{ user.username }}";
-      {% else %}
-      playerName = prompt("Enter your name for the leaderboard:", "Player");
-      {% endif %}
+      const towerGameConfig = document.getElementById('towerGameConfig');
+      const isAuthenticated = towerGameConfig?.dataset.authenticated === 'true';
+      const configuredUsername = towerGameConfig?.dataset.username || '';
+      const playerName = isAuthenticated ? configuredUsername : prompt("Enter your name for the leaderboard:", "Player");
       if (playerName === null) return;
 
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

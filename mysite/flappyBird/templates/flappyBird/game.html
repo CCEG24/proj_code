@@ -29,6 +29,11 @@
     }
 </style>
 
+<div id="flappyBirdConfig"
+  data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+  data-username="{{ user.username|escape }}"
+  hidden></div>
+
 <div class="game-container">
     <p class="game-instructions">Click or tap to make the bird flap! Avoid the pipes!</p>
     <div style="margin-bottom: 10px;">
@@ -79,12 +84,10 @@
   }
   
   function saveScoreToDatabase(score) {
-    let playerName;
-    {% if user.is_authenticated %}
-      playerName = "{{ user.username }}";
-    {% else %}
-      playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
-    {% endif %}
+    const flappyBirdConfig = document.getElementById('flappyBirdConfig');
+    const isAuthenticated = flappyBirdConfig?.dataset.authenticated === 'true';
+    const configuredUsername = flappyBirdConfig?.dataset.username || '';
+    const playerName = isAuthenticated ? configuredUsername : prompt("Enter your name for the leaderboard:", "Anonymous");
     
     if (playerName !== null) {
       saveScore(playerName, score);
