@@ -11,7 +11,7 @@ def index(request):
 
 
 def leaderboard(request):
-    scores = TowerGameScore.objects.order_by('wasted_moves', '-difficulty', 'created_at')
+    scores = TowerGameScore.objects.all()
     score_rows = []
 
     for score in scores:
@@ -28,6 +28,16 @@ def leaderboard(request):
                 "created_at": score.created_at,
             }
         )
+
+    # Keep ranking aligned with displayed values instead of relying on stored wasted_moves.
+    score_rows.sort(
+        key=lambda row: (
+            row["wasted_moves"],
+            row["moves"],
+            -row["difficulty"],
+            row["created_at"],
+        )
+    )
 
     return render(request, 'towerGame/leaderboard.html', {'scores': score_rows})
 
