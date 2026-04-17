@@ -1,17 +1,14 @@
-import random
-import time
-from .models import Answer, Question
-import sympy
 import logging
+import random
+
+import sympy
+
 logger = logging.getLogger(__name__)
 
-testForAprilFools = False
 
 def check(input):
-    if testForAprilFools or time.strftime("%m-%d") == "04-01":
-        return input[::-1]
-    else:
-        return input
+    return input
+
 
 fallbackResponses = [
     ("Yes", 2),

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Question Answerer 5000{% endblock %}
+{% block title %}{{ pageTitle }}{% endblock %}
 
-{% block header %}Question Answerer 5000{% endblock %}
+{% block header %}{{ pageHeader }}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -10,15 +10,20 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="question">Ask your question! Use 'calculate [maths question]' to do maths!</label>    
-                <input type="text" id="question" name="question" placeholder="Ask your question here..." required>
-                <p>Note: This is a joke and the answer is not always correct (unless you're doing maths).</p>
+                <label for="question">{{ questionLabel }}</label>
+                <input type="text" id="question" name="question" placeholder="{{ placeholderText }}" value="{{ questionValue }}" required>
+                <p>{{ noteText }}</p>
             </div>
-            <button type="submit" class="btn">Ask</button>
+            {% if errorMessage %}
+                <div class="form-group" style="margin-top:10px;">
+                    <p>{{ errorMessage }}</p>
+                </div>
+            {% endif %}
+            <button type="submit" class="btn">{{ buttonText }}</button>
         </form>
         {% if answer %}
             <div class="form-group" style="margin-top:20px;">
-                <label>Answer:</label>
+                <label>{{ answerLabel }}</label>
                 <p>{{ answer }}</p>
             </div>
         {% endif %}
