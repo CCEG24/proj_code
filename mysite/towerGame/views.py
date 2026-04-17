@@ -43,11 +43,15 @@ def submit_score(request):
         
         if moves < 0 or difficulty < 1 or difficulty > 8:
             return JsonResponse({'success': False, 'error': 'Invalid input'}, status=400)
+
+        optimal_moves = (2 ** difficulty) - 1
+        wasted_moves = max(0, moves - optimal_moves)
         
         score = TowerGameScore.objects.create(
             player_name=player_name,
             moves=moves,
-            difficulty=difficulty
+            difficulty=difficulty,
+            wasted_moves=wasted_moves,
         )
         
         return JsonResponse({

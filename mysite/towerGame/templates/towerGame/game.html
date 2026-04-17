@@ -156,10 +156,11 @@
     }
 
     function submitScore(moves, diff) {
+      let playerName;
       {% if user.is_authenticated %}
-      const playerName = "{{ user.username }}";
+      playerName = "{{ user.username }}";
       {% else %}
-        const playerName = prompt("Enter your name for the leaderboard:", "Player");
+      playerName = prompt("Enter your name for the leaderboard:", "Player");
       {% endif %}
       if (playerName === null) return;
 
@@ -174,7 +175,6 @@
         body: JSON.stringify({
           player_name: playerName,
           moves: moves,
-          wasted_moves: minMoves - moves,
           difficulty: diff
         })
       })
