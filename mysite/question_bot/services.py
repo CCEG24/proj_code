@@ -13,21 +13,34 @@ def check(input):
     else:
         return input
 
-possibleAnswers = [
-      "Yes",
-      "No",
-      "Maybe",
-      "I don't know",
-      "I don't care",
-      "I don't want to answer that",
-      "Why would I know that?",
-      "I don't know, ask Google",
-      "I don't know, ask Bing",
-      "I don't know, ask DuckDuckGo",
-      "I don't know, ask Yahoo",
-      "I don't know, ask Ask Jeeves",
-      "I don't know, ask AltaVista",
+fallbackResponses = [
+    ("Yes", 2),
+    ("No", 2),
+    ("Maybe", 2),
+    ("I don't know", 5),
+    ("I need a bit more context.", 5),
+    ("Try asking that another way.", 5),
+    ("I can answer that, but not from that question alone.", 4),
+    ("Can you be more specific?", 4),
+    ("That is above my current pay grade.", 3),
+    ("I don't care", 1),
+    ("I don't want to answer that", 1),
+    ("Why would I know that?", 2),
+    ("I don't know, ask Google", 2),
+    ("That depends.", 4),
+    ("Possibly.", 3),
+    ("Unclear. Please retry with confidence.", 3),
+    ("My sources are inconclusive.", 3),
+    ("I am processing your question with extreme prejudice.", 1),
+    ("That one needs a human.", 3),
+    ("I have no strong opinion either way.", 2),
 ]
+
+
+def pick_weighted_response(responses):
+    texts = [text for text, _ in responses]
+    weights = [weight for _, weight in responses]
+    return random.choices(texts, weights=weights, k=1)[0]
 
 def handle_question(question_text):
     q = question_text.lower()
@@ -105,4 +118,4 @@ def handle_question(question_text):
     elif q == 'how do i uninstall you?':
         return("You don't. I uninstall you >:)")
     else:
-        return check(random.choice(possibleAnswers))
+        return check(pick_weighted_response(fallbackResponses))
