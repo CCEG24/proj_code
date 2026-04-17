@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.conf import settings
+from django.core.cache import cache
 import io
 import base64
 import requests
@@ -10,6 +11,9 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import pytz
 import random
+import logging
+
+logger = logging.getLogger(__name__)
 
 def index(request):
     """Render the main index page"""
@@ -45,6 +49,31 @@ def generate_mock_weather_data(start_date, end_date):
     
     return pd.DataFrame(data)
 
+
+def fetch_weather_json(url, params, cache_key, timeout=10, ttl=900):
+    """Fetch weather JSON with cache fallback when provider rate-limits requests."""
+    cached_data = cache.get(cache_key)
+
+    try:
+        response = requests.get(url, params=params, timeout=timeout)
+
+        if response.status_code == 429:
+            if cached_data is not None:
+                return cached_data, True
+            raise requests.exceptions.HTTPError(
+                'Weather provider rate limit reached.', response=response
+            )
+
+        response.raise_for_status()
+        payload = response.json()
+        cache.set(cache_key, payload, ttl)
+        return payload, False
+    except requests.exceptions.RequestException:
+        if cached_data is not None:
+            logger.warning('Using cached weather data after API failure.')
+            return cached_data, True
+        raise
+
 def display(request):
     location = 'Kenilworth, GB'
     # Kenilworth coordinates
@@ -52,6 +81,7 @@ def display(request):
     longitude = -1.5827
 
     try:
+        warning_message = None
         # Set timezone to UK
         uk_tz = pytz.timezone('Europe/London')
         now = datetime.now(uk_tz)
@@ -69,10 +99,22 @@ def display(request):
             'daily': 'temperature_2m_max,temperature_2m_min,temperature_2m_mean,windspeed_10m_max',
             'timezone': 'Europe/London'
         }
-        
-        historical_response = requests.get(historical_url, params=historical_params)
-        historical_response.raise_for_status()
-        historical_data = historical_response.json()
+
+        historical_cache_key = (
+            f"weather:historical:{latitude}:{longitude}:"
+            f"{start_date.strftime('%Y-%m-%d')}:{end_date.strftime('%Y-%m-%d')}"
+        )
+        historical_data, historical_from_cache = fetch_weather_json(
+            historical_url,
+            historical_params,
+            historical_cache_key,
+            ttl=3600,
+        )
+        if historical_from_cache:
+            warning_message = (
+                'Showing cached weather data because the weather provider is '
+                'temporarily rate-limiting requests.'
+            )
         
         # Convert historical data to DataFrame
         df = pd.DataFrame({
@@ -123,24 +165,41 @@ def display(request):
             'timezone': 'Europe/London',
             'forecast_days': 2  # Get 2 days to ensure we have tomorrow's data
         }
-        
-        forecast_response = requests.get(forecast_url, params=forecast_params)
-        forecast_response.raise_for_status()
-        forecast_data = forecast_response.json()
 
-        # Get tomorrow's forecast data (using index 1 for tomorrow)
-        if 'daily' in forecast_data and len(forecast_data['daily']['time']) > 1:
-            tomorrow_max_temp = forecast_data['daily']['temperature_2m_max'][1]
-            tomorrow_min_temp = forecast_data['daily']['temperature_2m_min'][1]
-            tomorrow_max_wind = forecast_data['daily']['windspeed_10m_max'][1]
-            tomorrow_precip_chance = forecast_data['daily']['precipitation_probability_mean'][1]
-            tomorrow_date = forecast_data['daily']['time'][1]
-        else:
-            tomorrow_max_temp = 'Not Available'
-            tomorrow_min_temp = 'Not Available'
-            tomorrow_max_wind = 'Not Available'
-            tomorrow_precip_chance = 'Not Available'
-            tomorrow_date = 'Not Available'
+        tomorrow_max_temp = 'Not Available'
+        tomorrow_min_temp = 'Not Available'
+        tomorrow_max_wind = 'Not Available'
+        tomorrow_precip_chance = 'Not Available'
+        tomorrow_date = 'Not Available'
+
+        try:
+            forecast_cache_key = f"weather:forecast:{latitude}:{longitude}"
+            forecast_data, forecast_from_cache = fetch_weather_json(
+                forecast_url,
+                forecast_params,
+                forecast_cache_key,
+                ttl=900,
+            )
+
+            if forecast_from_cache and not warning_message:
+                warning_message = (
+                    'Showing cached forecast because the weather provider is '
+                    'temporarily rate-limiting requests.'
+                )
+
+            # Get tomorrow's forecast data (using index 1 for tomorrow)
+            if 'daily' in forecast_data and len(forecast_data['daily']['time']) > 1:
+                tomorrow_max_temp = forecast_data['daily']['temperature_2m_max'][1]
+                tomorrow_min_temp = forecast_data['daily']['temperature_2m_min'][1]
+                tomorrow_max_wind = forecast_data['daily']['windspeed_10m_max'][1]
+                tomorrow_precip_chance = forecast_data['daily']['precipitation_probability_mean'][1]
+                tomorrow_date = forecast_data['daily']['time'][1]
+        except requests.exceptions.RequestException:
+            if not warning_message:
+                warning_message = (
+                    'Live forecast is temporarily unavailable. Historical weather '
+                    'data is still shown below.'
+                )
         
         # Handle NaN in tomorrow's forecast data and round numeric values
         if isinstance(tomorrow_max_temp, (int, float)): tomorrow_max_temp = round(tomorrow_max_temp, 1)
@@ -203,6 +262,7 @@ def display(request):
             'current_max_wind': tomorrow_max_wind,
             'current_precip': tomorrow_precip_chance, # Using tomorrow's precip chance for summary
             'current_date': tomorrow_date,
+            'warning': warning_message,
             'is_superuser': request.user.is_superuser,
             'username': request.user.username if request.user.is_authenticated else None
         }
@@ -210,7 +270,16 @@ def display(request):
         return render(request, 'display.html', context)
 
     except requests.exceptions.RequestException as e:
-        error_message = f'Error fetching weather data: {str(e)}'
+        status_code = getattr(getattr(e, 'response', None), 'status_code', None)
+        if status_code == 429:
+            error_message = (
+                'Weather service is currently busy. Please try again in a few '
+                'minutes.'
+            )
+        else:
+            error_message = (
+                'Unable to fetch weather data right now. Please try again shortly.'
+            )
         return render(request, 'display.html', {
             'error': error_message,
             'location': location,
