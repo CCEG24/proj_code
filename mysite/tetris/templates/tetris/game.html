@@ -195,16 +195,11 @@
       arena.forEach(row => row.fill(0));
       saveHighScore();
       // --- POST score to Django ---
-      save = prompt("Save score to leaderboard? (y/n)");
-      if (save === "y") {
-        {% if user.is_authenticated %}
-        playerName = "{{ user.username }}";
-        {% else %}
+    {% if user.is_authenticated %}
+    playerName = "{{ user.username }}";
+    {% else %}
         playerName = prompt("Enter your name for the leaderboard:", "Anonymous");
-        {% endif %}
-      } else {
-        playerName = null;
-      }
+    {% endif %}
       if (playerName !== null) {
         fetch('/tetris/submit_score/', {
           method: 'POST',
