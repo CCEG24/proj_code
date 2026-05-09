@@ -3,41 +3,134 @@
 {% block title %}Tetris Game{% endblock %}
 {% block header %}Tetris{% endblock %}
 
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-</head>
+{% block extra_head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  .game-card {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .game-intro {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .game-layout {
+    display: grid;
+    gap: 18px;
+    justify-items: center;
+  }
+
+  .score-panel {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #f7f7f7;
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+  }
+
+  .score-panel span {
+    font-weight: 600;
+    color: #333;
+  }
+
+  .preview-wrap {
+    text-align: center;
+  }
+
+  .game-board {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+  }
+
+  #tetris {
+    display: block;
+    width: min(100%, 240px);
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #111;
+  }
+
+  #nextBlock {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+  }
+
+  .control-row,
+  .game-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .control-row .btn,
+  .game-actions .btn {
+    min-width: 56px;
+  }
+
+  .help-card {
+    width: 100%;
+    background: #f7f7f7;
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .help-card p {
+    margin: 0 0 8px;
+  }
+
+  .help-card p:last-child {
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="card" style="max-width: 400px; margin: 0 auto;">
+<div class="card game-card">
+  <p class="game-intro">Stack and clear lines to keep the board open. Use the controls below or the keyboard.</p>
+  <div class="game-actions">
+    <a href="{% url 'arcade:index' %}" class="btn">Back to Arcade</a>
+    <a href="{% url 'tetris:leaderboard' %}" class="btn">Leaderboard</a>
+    <button id="restartBtn" class="btn" onclick="restartGame()">Restart</button>
+  </div>
+  <div class="game-layout">
     <div id="tetrisConfig"
          data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
          data-username="{{ user.username|escape }}"
          hidden></div>
-    <h2 style="text-align:center;">Tetris</h2>
-    <div id="score">Score: 0</div>
-    <div id="highScore">High Score: 0</div>
-    <div id="nextBlockContainer" style="text-align:center; margin-bottom:10px;">
-      <span>Next:</span>
-      <canvas id="nextBlock" width="80" height="80" style="background:#222; display:inline-block; vertical-align:middle;"></canvas>
+    <div class="score-panel">
+      <span id="score">Score: 0</span>
+      <span id="highScore">High Score: 0</span>
     </div>
-    <canvas id="tetris" width="240" height="400" style="display:block; margin: 0 auto;"></canvas>
-    <div class="controls" style="text-align:center; margin-top: 10px;">
+    <div class="game-board">
+      <div class="preview-wrap">
+        <p>Next piece</p>
+        <canvas id="nextBlock" width="80" height="80"></canvas>
+      </div>
+      <canvas id="tetris" width="240" height="400"></canvas>
+    </div>
+    <div class="control-row">
       <button class="btn" onclick="playerMove(-1)">←</button>
       <button class="btn" onclick="playerDrop()">↓</button>
       <button class="btn" onclick="playerMove(1)">→</button>
       <button class="btn" onclick="playerRotate(1)">⟳</button>
-
-  <div>
-    <p>How to play:</p>
-    <p>Use the arrow keys to move the tetris piece.</p>
-    <p>Use the q and w keys to rotate the tetris piece.</p>
-    <p>Use the p key to pause the game.</p>
-    <p>Use the down arrow key to drop the tetris piece.</p>
-  </div>
-  </div>
-    <a href="{% url 'tetris:leaderboard' %}" class="btn">Leaderboard</a>
-    <button id="restartBtn" class="btn" style="width:100%; margin-top:10px;" onclick="restartGame()">Restart</button>
+    </div>
+    <div class="help-card">
+      <p>How to play</p>
+      <p>Use the arrow keys to move the piece.</p>
+      <p>Use Q and W to rotate the piece.</p>
+      <p>Use P to pause the game.</p>
+      <p>Use the down arrow key to drop the piece faster.</p>
+    </div>
   </div>
 </div>
 <script>

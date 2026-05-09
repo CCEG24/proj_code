@@ -6,26 +6,71 @@
 {% block extra_head %}
   <meta name="csrf-token" content="{{ csrf_token }}" />
   <style>
-    #controls {
-      margin-bottom: 10px;
+    .game-card {
+      max-width: 920px;
+      margin: 0 auto;
     }
+
+    .game-intro {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .game-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .game-actions .btn,
+    #controls .btn,
+    #controls button {
+      min-width: 140px;
+    }
+
+    #controls {
+      margin: 0 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #controls label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    #controls input {
+      width: 90px;
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
     #game {
       display: flex;
       justify-content: space-around;
       align-items: flex-end;
-      width: min(96vw, 1200px);
-      height: min(70vh, 680px);
+      width: 100%;
+      min-height: min(70vh, 680px);
+      gap: 16px;
+      margin-bottom: 16px;
     }
     .tower {
       flex: 1;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;
-      margin: 0 10px;
       height: 100%;
       position: relative;
-      background: #e0e0e0;
-      border-radius: 8px;
+      background: #f7f7f7;
+      border: 1px solid #e3e3e3;
+      border-radius: 10px;
+      padding: 12px 8px;
     }
     .disk {
       height: 30px;
@@ -53,6 +98,15 @@
     }
     #winMessage { color: green; }
 
+    .game-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 14px;
+    }
+
     @media (max-width: 600px) {
       .disk {
         height: 24px;
@@ -61,7 +115,12 @@
       }
 
       .tower {
-        margin: 0 4px;
+        padding: 10px 4px;
+      }
+
+      #game {
+        min-height: 56vh;
+        flex-direction: column;
       }
     }
   </style>
@@ -72,23 +131,25 @@
   data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
   data-username="{{ user.username|escape }}"
   hidden></div>
-<p>Move all the disks from the left tower to the right tower to win! You can select the difficulty (number of disks) and try to solve 
-   it in the least moves possible! You can only move one disk at a time, and you cannot place a larger disk on top of a smaller one.
-   To move a disk, click on it and then click on the box you want to move it to.</p>
-<div id="controls">
-  <label for="difficulty">Difficulty (Disks): </label>
-  <input type="number" id="difficulty" min="3" max="8" value="3" />
-  <button onclick="startGame()">Start Game</button>
+<div class="card game-card">
+  <p class="game-intro">Move all the disks from the left tower to the right tower. Solve it in the fewest moves possible without placing a larger disk on a smaller one.</p>
+  <div class="game-actions">
+    <a href="{% url 'arcade:index' %}" class="btn">Back to Arcade</a>
+    <a href="{% url 'towerGame:leaderboard' %}" class="btn">Leaderboard</a>
+  </div>
+  <div id="controls">
+    <label for="difficulty">Difficulty</label>
+    <input type="number" id="difficulty" min="3" max="8" value="3" />
+    <button class="btn" onclick="startGame()">Start Game</button>
+  </div>
+  <div id="game">
+    <div class="tower" id="tower1"></div>
+    <div class="tower" id="tower2"></div>
+    <div class="tower" id="tower3"></div>
+  </div>
+  <div id="moveCounter">Moves: 0</div>
+  <div id="winMessage"></div>
 </div>
-<div id="game">
-  <div class="tower" id="tower1"></div>
-  <div class="tower" id="tower2"></div>
-  <div class="tower" id="tower3"></div>
-</div>
-<div id="moveCounter">Moves: 0</div>
-<div id="winMessage"></div>
-
-<a href="{% url 'towerGame:leaderboard' %}" class="btn">Leaderboard</a>
 
 <script>
     let selectedDisk = null;

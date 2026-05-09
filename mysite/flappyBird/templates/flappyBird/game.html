@@ -3,43 +3,70 @@
 {% block title %}Flappy Bird{% endblock %}
 {% block header %}Flappy Bird{% endblock %}
 
-{% block content %}
+{% block extra_head %}
 <style>
-    .game-container {
-        margin: 0;
-        overflow: hidden;
-        background-color: #70c5ce;
-        touch-action: manipulation;
-        text-align: center;
-        padding: 20px;
-    }
+  .game-card {
+    max-width: 760px;
+    margin: 0 auto;
+  }
 
-    canvas {
-        display: block;
-        margin: 0 auto;
-        background: #70c5ce;
-        border: 2px solid #333;
-        border-radius: 10px;
-    }
-    
-    .game-instructions {
-        color: white;
-        margin-bottom: 10px;
-        font-size: 18px;
-    }
+  .game-intro {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .game-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .game-actions .btn {
+    min-width: 150px;
+    text-align: center;
+  }
+
+  .game-canvas-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  #gameCanvas {
+    display: block;
+    width: min(100%, 400px);
+    height: auto;
+    background: #70c5ce;
+    border: 2px solid #d9e3e8;
+    border-radius: 12px;
+  }
+
+  .game-note {
+    margin-top: 12px;
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+  }
 </style>
+{% endblock %}
 
+{% block content %}
 <div id="flappyBirdConfig"
   data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
   data-username="{{ user.username|escape }}"
   hidden></div>
 
-<div class="game-container">
-    <p class="game-instructions">Click or tap to make the bird flap! Avoid the pipes!</p>
-    <div style="margin-bottom: 10px;">
-        <a href="{% url 'flappyBird:leaderboard' %}" style="color: white; text-decoration: none; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px;">View Leaderboard</a>
-    </div>
-<canvas id="gameCanvas" width="400" height="600"></canvas>
+<div class="card game-card">
+  <p class="game-intro">Click or tap to make the bird flap. Avoid the pipes and keep your score climbing.</p>
+  <div class="game-actions">
+    <a href="{% url 'arcade:index' %}" class="btn">Back to Arcade</a>
+    <a href="{% url 'flappyBird:leaderboard' %}" class="btn">Leaderboard</a>
+  </div>
+  <div class="game-canvas-wrap">
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+  </div>
+  <p class="game-note">Tap the game area to flap. Tap after game over to restart.</p>
 
 <script>
   const canvas = document.getElementById("gameCanvas");

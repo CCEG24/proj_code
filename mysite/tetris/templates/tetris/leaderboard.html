@@ -87,7 +87,7 @@
 </style>
 
 <div class="leaderboard-container">
-    <a href="{% url 'flappyBird:game' %}" class="back-button">← Back to Game</a>
+    <a href="{% url 'tetris:game' %}" class="back-button">← Back to Game</a>
     
     {% if scores %}
         <table class="leaderboard-table">
@@ -114,7 +114,7 @@
         <div class="no-scores">
             <h3>No scores yet!</h3>
             <p>Be the first to play and set a high score!</p>
-            <a href="{% url 'flappyBird:game' %}" class="back-button">Start Playing</a>
+            <a href="{% url 'tetris:game' %}" class="back-button">Start Playing</a>
         </div>
     {% endif %}
 </div>
