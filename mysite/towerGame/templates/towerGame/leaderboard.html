@@ -3,8 +3,36 @@
 {% block title %}Tower of Hanoi Leaderboard{% endblock %}
 {% block header %}Tower of Hanoi Leaderboard{% endblock %}
 
-{% block content %}
+{% block extra_head %}
 <style>
+  .leaderboard-card {
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .leaderboard-intro {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #555;
+  }
+
+  .leaderboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .leaderboard-actions .btn {
+    min-width: 150px;
+    text-align: center;
+  }
+
+  .leaderboard-table-wrap {
+    overflow-x: auto;
+  }
+
   .leaderboard-wrap {
     background: white;
     border-radius: 10px;
@@ -45,13 +73,7 @@
     border: 1px solid #dce8dc;
     border-radius: 8px;
     color: #2b4b2b;
-  }
-
-  .leaderboard-actions {
-    margin-top: 16px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    text-align: center;
   }
 
   @media (max-width: 800px) {
@@ -62,43 +84,50 @@
     }
   }
 </style>
+{% endblock %}
 
-{% if scores %}
-  <div class="leaderboard-wrap">
-    <table class="leaderboard-table">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Player</th>
-          <th>Moves</th>
-          <th>Difficulty</th>
-          <th>Optimal</th>
-          <th>Wasted</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for score in scores %}
-          <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ score.player_name }}</td>
-            <td>{{ score.moves }}</td>
-            <td>{{ score.difficulty }}</td>
-            <td>{{ score.optimal_moves }}</td>
-            <td>{{ score.wasted_moves }}</td>
-            <td>{{ score.created_at|date:"Y-m-d H:i" }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{% block content %}
+<div class="card leaderboard-card">
+  <p class="leaderboard-intro">Compare move counts, difficulty, and efficiency on the Tower of Hanoi leaderboard.</p>
+  <div class="leaderboard-actions">
+    <a class="btn" href="{% url 'arcade:index' %}">Back to Arcade</a>
+    <a class="btn" href="{% url 'towerGame:index' %}">Back to Game</a>
   </div>
-{% else %}
-  <div class="leaderboard-empty">
-    No scores yet. Finish a game and submit a score to appear on the leaderboard.
-  </div>
-{% endif %}
 
-<div class="leaderboard-actions">
-  <a class="btn" href="{% url 'towerGame:index' %}">Back to Game</a>
-</div>
+  {% if scores %}
+    <div class="leaderboard-table-wrap">
+      <div class="leaderboard-wrap">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player</th>
+              <th>Moves</th>
+              <th>Difficulty</th>
+              <th>Optimal</th>
+              <th>Wasted</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for score in scores %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ score.player_name }}</td>
+                <td>{{ score.moves }}</td>
+                <td>{{ score.difficulty }}</td>
+                <td>{{ score.optimal_moves }}</td>
+                <td>{{ score.wasted_moves }}</td>
+                <td>{{ score.created_at|date:"Y-m-d H:i" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="leaderboard-empty">
+      No scores yet. Finish a game and submit a score to appear on the leaderboard.
+    </div>
+  {% endif %}
 {% endblock %}

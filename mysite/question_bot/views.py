@@ -22,7 +22,7 @@ def index(request):
         if form.is_valid():
             answer = handle_question(form.cleaned_data['question'])
         else:
-            errorMessage = 'Use proper grammar and end your question with a question mark.'
+            errorMessage = 'Use proper grammar! Start you sentence with a capital letter and end your question with a question mark.'
 
     is_april_fools = time.strftime("%m-%d") == "04-01"
     context = {

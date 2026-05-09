@@ -3,23 +3,45 @@
 {% block title %}Tetris Leaderboard{% endblock %}
 {% block header %}Tetris Leaderboard{% endblock %}
 
-{% block content %}
+{% block extra_head %}
 <style>
-    .leaderboard-container {
-        max-width: 800px;
+    .leaderboard-card {
+        max-width: 920px;
         margin: 0 auto;
-        padding: 20px;
     }
-    
+
+    .leaderboard-intro {
+        text-align: center;
+        margin-bottom: 16px;
+        color: #555;
+    }
+
+    .leaderboard-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 18px;
+    }
+
+    .leaderboard-actions .btn {
+        min-width: 150px;
+        text-align: center;
+    }
+
+    .leaderboard-table-wrap {
+        overflow-x: auto;
+    }
+
     .leaderboard-table {
         width: 100%;
         border-collapse: collapse;
         background: white;
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
+
     .leaderboard-table th {
         background-color: #2d662d;
         color: white;
@@ -27,94 +49,89 @@
         text-align: left;
         font-size: 18px;
     }
-    
+
     .leaderboard-table td {
         padding: 12px 15px;
         border-bottom: 1px solid #eee;
     }
-    
+
     .leaderboard-table tr:nth-child(even) {
         background-color: #f9f9f9;
     }
-    
+
     .leaderboard-table tr:hover {
         background-color: #f0f0f0;
     }
-    
+
     .rank {
         font-weight: bold;
         color: #2d662d;
         width: 60px;
     }
-    
+
     .player-name {
         font-weight: bold;
     }
-    
+
     .score {
         font-size: 18px;
         color: #2d662d;
         font-weight: bold;
     }
-    
+
     .date {
         color: #666;
         font-size: 14px;
     }
-    
-    
-    .back-button {
-        display: inline-block;
-        background-color: #2d662d;
-        color: white;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        transition: background-color 0.3s ease;
-    }
-    
-    .back-button:hover {
-        background-color: #1e4b1e;
-    }
-    
+
     .no-scores {
         text-align: center;
         color: #666;
         font-style: italic;
-        padding: 40px;
+        padding: 40px 20px;
+        background: #f7f7f7;
+        border: 1px solid #e3e3e3;
+        border-radius: 10px;
     }
 </style>
+{% endblock %}
 
-<div class="leaderboard-container">
-    <a href="{% url 'tetris:game' %}" class="back-button">← Back to Game</a>
+{% block content %}
+<div class="card leaderboard-card">
+    <p class="leaderboard-intro">Track the highest Tetris scores and compare your best runs against everyone else.</p>
+    <div class="leaderboard-actions">
+        <a href="{% url 'arcade:index' %}" class="btn">Back to Arcade</a>
+        <a href="{% url 'tetris:game' %}" class="btn">Back to Game</a>
+    </div>
     
     {% if scores %}
-        <table class="leaderboard-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Score</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for score in scores %}
+        <div class="leaderboard-table-wrap">
+            <table class="leaderboard-table">
+                <thead>
                     <tr>
-                        <td class="rank">{{ forloop.counter }}</td>
-                        <td class="player-name">{{ score.user }}</td>
-                        <td class="score">{{ score.score }}</td>
-                        <td class="date">{{ score.date|date:"M d, Y" }}</td>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Date</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for score in scores %}
+                        <tr>
+                            <td class="rank">{{ forloop.counter }}</td>
+                            <td class="player-name">{{ score.user }}</td>
+                            <td class="score">{{ score.score }}</td>
+                            <td class="date">{{ score.date|date:"M d, Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <div class="no-scores">
             <h3>No scores yet!</h3>
             <p>Be the first to play and set a high score!</p>
-            <a href="{% url 'tetris:game' %}" class="back-button">Start Playing</a>
+            <a href="{% url 'tetris:game' %}" class="btn">Start Playing</a>
         </div>
     {% endif %}
 </div>
