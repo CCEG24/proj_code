@@ -103,6 +103,9 @@
 
         <div class="form-section">
             <h3>Email Verification</h3>
+            {% if user.is_email_verified %}
+            <p>You have already verified your email.</p>
+            {% else %}
             <form method="post" action="{% url 'accounts:send_verification_code' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn">Send Verification Code</button>
@@ -112,6 +115,7 @@
                 {{ verify_code_form.as_p }}
                 <button type="submit" class="btn">Verify Code</button>
             </form>
+            {% endif %}
         </div>
     </div>
 </div>
