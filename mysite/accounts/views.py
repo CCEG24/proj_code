@@ -32,9 +32,9 @@ def login_view(request):
                 messages.success(request, 'Successfully logged in!')
                 return redirect('home:index')
             else:
-                messages.error(request, 'Incorrect password. Please try again.')
+                messages.error(request, 'Invalid credidentials.')
         except User.DoesNotExist:
-            messages.error(request, f'Username "{username}" does not exist. Please check your username or register a new account.')
+            messages.error(request, f'Invalid credidentials.')
     
     return render(request, 'accounts/login.html')
 
