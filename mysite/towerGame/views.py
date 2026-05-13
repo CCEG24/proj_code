@@ -34,7 +34,7 @@ def leaderboard(request):
         key=lambda row: (
             row["wasted_moves"],
             row["moves"],
-            -row["difficulty"],
+            row["difficulty"],
             row["created_at"],
         )
     )
