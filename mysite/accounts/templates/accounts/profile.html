@@ -103,7 +103,7 @@
 
         <div class="form-section">
             <h3>Email Verification</h3>
-            {% if user.is_email_verified %}
+            {% if user.profile.is_email_verified %}
             <p>You have already verified your email.</p>
             {% else %}
             <form method="post" action="{% url 'accounts:send_verification_code' %}">
