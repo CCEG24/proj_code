@@ -31,7 +31,7 @@ def index(request):
         'isAprilFools': is_april_fools,
         'pageTitle': reverse_text('Question Answerer 5000', is_april_fools),
         'pageHeader': reverse_text('Question Answerer 5000', is_april_fools),
-        'questionLabel': reverse_text("Ask your question! Must have a question mark at the end >:(. Use 'calculate [maths question]' to do maths!", is_april_fools),
+        'questionLabel': reverse_text("Ask your question! Must have a question mark at the end >:(. Use 'Calculate [maths question]?' to do maths!", is_april_fools),
         'noteText': reverse_text("Note: This is a joke and the answer is not always correct (unless you're doing maths).", is_april_fools),
         'buttonText': reverse_text('Ask', is_april_fools),
         'answerLabel': reverse_text('Answer:', is_april_fools),
