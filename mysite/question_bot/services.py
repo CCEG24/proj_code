@@ -44,6 +44,7 @@ def handle_question(question_text):
     if 'calculate' in q:
         _, _, expr = question_text.partition('calculate')
         expr = expr.strip()
+        expr= expr.strip("?")
         expr = expr.replace('x', '*').replace('X', '*').replace('÷', '/')
         try:
             result = sympy.sympify(expr).evalf()
