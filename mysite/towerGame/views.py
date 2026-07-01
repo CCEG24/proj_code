@@ -33,8 +33,8 @@ def leaderboard(request):
     score_rows.sort(
         key=lambda row: (
             row["wasted_moves"],
-            row["moves"],
             row["difficulty"],
+            row["moves"],
             row["created_at"],
         )
     )
