@@ -161,6 +161,18 @@
     }
   });
 
+  // Spacebar input for Fergus
+  document.addEventListener("keydown", (event) => {
+  if (event.code === "Space") {
+    event.preventDefault();
+
+    if (!flapQueued) {
+      flap();
+      flapQueued = true;
+    }
+  }
+  });
+
   canvas.addEventListener("pointerup", () => {
     flapQueued = false;
   });
