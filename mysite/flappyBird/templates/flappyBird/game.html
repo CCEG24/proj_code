@@ -173,9 +173,22 @@
   }
   });
 
-  canvas.addEventListener("pointerup", () => {
-    flapQueued = false;
-  });
+  document.addEventListener("keydown", (event) => {
+    if (event.code === "Space" && !event.repeat) {
+      event.preventDefault();
+  
+      if (!flapQueued) {
+        flap();
+        flapQueued = true;
+      }
+    }
+  });
+
+document.addEventListener("keyup", (event) => {
+  if (event.code === "Space") {
+    flapQueued = false;
+  }
+});
 
   function drawBird() {
     ctx.fillStyle = birdColor;
